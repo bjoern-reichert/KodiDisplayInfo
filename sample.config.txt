@@ -1,0 +1,32 @@
+[CONFIG]
+#Screen Modus: time (default), later thumbnail
+SCREENMODUS = time
+
+[DISPLAY]
+# Possible resolutions: 320x240 (default) or 480x272 or 480x320
+RESOLUTION = 
+# Set to your Frambuffer /dev/fb1 or /dev/fb2
+FBDEV = 
+
+# Setting find unter: Kodi : System → Settings → Services → Webserver
+[KODI_WEBSERVER]
+# Set it to localhost or IP (192.168.2.101)
+HOST = localhost
+# Port of the Kodi Webserver
+PORT = 8080
+# Username
+USER = 
+# Password
+PASS = 
+
+[COLOR]
+# Color for background
+BLACK = 000000
+# Color for font
+WHITE = FFFFFF
+# Color for error message
+RED = FF0000
+# Color for progress bar background
+GREEN = 87D31E
+# Color for progress bar improvement
+ORANGE = E07018
