@@ -5,7 +5,7 @@ SCREENMODUS = time
 [DISPLAY]
 # Possible resolutions: 320x240 (default) or 480x272 or 480x320
 RESOLUTION = 
-# Set to your Frambuffer /dev/fb1 or /dev/fb2
+# Set to your Framebuffer /dev/fb1 or /dev/fb2
 FBDEV = 
 
 # Setting find unter: Kodi : System → Settings → Services → Webserver
