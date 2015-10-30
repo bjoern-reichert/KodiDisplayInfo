@@ -14,5 +14,6 @@ Supported screen resolutions
 
 ###Installation guidelines
 [EN-Version http://www.opendisplaycase.com/kodidisplayinfo.html](http://www.opendisplaycase.com/kodidisplayinfo.html)
+
 [DE-Version http://www.opendisplaycase.de/kodidisplayinfo.html](http://www.opendisplaycase.de/kodidisplayinfo.html)
 
