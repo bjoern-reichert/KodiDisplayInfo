@@ -10,6 +10,7 @@
 # v2.2    IF Player.GetItem title is empty check if label is set
 # v3.0    Kodi 14 Release - Refactor Version
 #         Published GitHub 03.10.2015
+# v3.1    Watchmodus integration -> film (default), livetv [Asks the title more than once.]
 
 import os
 import sys
@@ -50,7 +51,8 @@ _ConfigDefault = {
     
     "display.resolution":       "320x240",   
     
-    "config.screenmodus":       "time",      
+    "config.screenmodus":       "time",
+    "config.watchmodus":        "film",    
                   
     "color.black":              BLACK,
     "color.white":              WHITE,
@@ -76,6 +78,14 @@ if configParser.has_option('CONFIG', 'SCREENMODUS'):
     else:
         helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
         print "Config [CONFIG] SCREENMODUS not set correctly - default is activ!"
+     
+if configParser.has_option('CONFIG', 'WATCHMODUS'):
+    temp = configParser.get('CONFIG', 'WATCHMODUS')
+    if temp=="film" or temp=="livetv":
+        _ConfigDefault['config.watchmodus'] = temp
+    else:
+        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
+        print "Config [CONFIG] WATCHMODUS not set correctly - default is activ!"   
         
 if configParser.has_option('DISPLAY', 'RESOLUTION'):
     temp = configParser.get('DISPLAY', 'RESOLUTION')
@@ -118,11 +128,11 @@ def main():
     video_title= ""
 
     helper.printout("[info]    ", _ConfigDefault['mesg.cyan'])
-    print "Start: KodiDisplayInfo Video"
+    print "Start: KodiDisplayInfo"
     
     pygame.init()
     screen = pygame.display.set_mode(getattr(draw_default, 'Screen'+_ConfigDefault['display.resolution'])(), 0, 32)
-    pygame.display.set_caption('KodiDisplayInfo Video')
+    pygame.display.set_caption('KodiDisplayInfo')
     pygame.mouse.set_visible(0)
     
     draw_default.setPygameScreen(pygame, screen)
@@ -135,8 +145,8 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                    running = False
+                #elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                #    running = False
                 
             time_now = datetime.datetime.now()
             #start draw
@@ -144,10 +154,13 @@ def main():
             
             playerid, playertype = KODI_WEBSERVER.KODI_GetActivePlayers()
             if playertype=="video" and int(playerid) > 0:    
-                if video_title == "":
+                if _ConfigDefault['config.watchmodus']=="livetv":
                     video_title = KODI_WEBSERVER.KODI_GetItem(playerid)
-                    helper.printout("[info]    ", _ConfigDefault['mesg.green'])
-                    print "Video: " +video_title
+                else:
+                    if video_title == "":
+                        video_title = KODI_WEBSERVER.KODI_GetItem(playerid)
+                        helper.printout("[info]    ", _ConfigDefault['mesg.green'])
+                        print "Video: " +video_title
                     
                 speed, minutes_time, minutes_timetotal = KODI_WEBSERVER.KODI_GetProperties(playerid) 
                 if minutes_timetotal>0:

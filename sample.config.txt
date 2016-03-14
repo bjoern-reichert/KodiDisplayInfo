@@ -1,6 +1,8 @@
 [CONFIG]
 #Screen Modus: time (default), later thumbnail
 SCREENMODUS = time
+#Watch Modus: film (default), livetv [Asks the title more than once.]
+WATCHMODUS = film
 
 [DISPLAY]
 # Possible resolutions: 320x240 (default) or 480x272 or 480x320

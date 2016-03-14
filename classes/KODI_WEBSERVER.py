@@ -20,18 +20,19 @@ class KODI_WEBSERVER:
             hours = hours * 60
         return int(hours + minutes)
         
-    def getJSON(self, url):
+    def getJSON(self, jsonconfig):
         try:
-            f = urllib.urlopen(url)
+            self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
+            f = urllib.urlopen(self.ip_port+jsonconfig)
             json_string = f.read()
             return json.loads(json_string)
         except IOError:
-            self.draw_default.infoTextKODI("NO KODI ACCESS!")
+            self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
             return json.loads('{"id":1,"jsonrpc":"2.0","result":[]}')
         
     def KODI_GetActivePlayers(self):
         try:
-            parsed_json = self.getJSON(self.ip_port+'{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}')
             try:
                 return parsed_json['result'][0]['playerid'], parsed_json['result'][0]['type']
             except KeyError:
@@ -45,7 +46,7 @@ class KODI_WEBSERVER:
         
     def KODI_GetItem(self, playerid):
         try:
-            parsed_json = self.getJSON(self.ip_port+'{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
             try:
                 video_title = parsed_json['result']['item']['title']
                 if video_title=="":
@@ -62,7 +63,7 @@ class KODI_WEBSERVER:
         
     def KODI_GetProperties(self, playerid):
         try:
-            parsed_json = self.getJSON(self.ip_port+'{"jsonrpc": "2.0", "method": "Player.GetProperties", "params": { "playerid": '+str(playerid)+', "properties": ["speed","time","totaltime"] }, "id": 1}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetProperties", "params": { "playerid": '+str(playerid)+', "properties": ["speed","time","totaltime"] }, "id": 1}')
             try:
                 speed = parsed_json['result']['speed']
                 minutes_time = self.__format_to_minute(parsed_json['result']['time']['hours'],parsed_json['result']['time']['minutes'])

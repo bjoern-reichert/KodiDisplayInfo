@@ -8,6 +8,9 @@ class DrawToDisplay_Default:
     _drawSetting['startscreen.clock.fontsize'] = 60
     _drawSetting['startscreen.clock.height_margin'] = 80
     
+    default_info_text = ""
+    default_info_color = ""
+    
     def __init__(self, helper, _ConfigDefault):
         self.helper = helper
         self._ConfigDefault = _ConfigDefault
@@ -43,8 +46,12 @@ class DrawToDisplay_Default:
         self._drawSetting['startscreen.clock.fontsize'] = 75
         self._drawSetting['startscreen.clock.height_margin'] = 118
     
-    def infoTextKODI(self, text):
-        self.displaytext(text, 32, (self.screen.get_width()/2), 20, 'none', (self._ConfigDefault['color.red']))
+    def setInfoText(self, text, color):
+        self.default_info_text = text
+        self.default_info_color = color
+    
+    def infoTextKODI(self, text, color):
+        self.displaytext(text, 32, (self.screen.get_width()/2), 20, 'none', color)
     
     def displaytext(self, text, size, x, y, floating, color):
         font = self.pygame.font.Font(self._ConfigDefault['basedirpath']+"fonts/MC360.ttf", size)
@@ -62,6 +69,11 @@ class DrawToDisplay_Default:
         self.screen.blit(text, [x, y])
     
     def drawLogoStartScreen(self, time_now):
+        if self.default_info_text != '':
+            self.infoTextKODI(self.default_info_text, self.default_info_color)
+        else:
+            self.infoTextKODI("KodiDisplayInfo", self._ConfigDefault['color.white'])
+        
         x = (self.screen.get_width()/2) - (self._drawSetting['startscreen.logo'].get_rect().width/2)
         y = (self.screen.get_height()/2) - (self._drawSetting['startscreen.logo'].get_rect().height/2)
         self.screen.blit(self._drawSetting['startscreen.logo'],(x,y-10))
