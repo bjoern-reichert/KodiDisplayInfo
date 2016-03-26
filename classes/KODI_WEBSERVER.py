@@ -71,10 +71,10 @@ class KODI_WEBSERVER:
 
                 return speed, minutes_time, minutes_timetotal
             except KeyError, e:
-                print "KeyError" + str(e)
+                print "KeyError: " + str(e)
                 return 0,0,0
             except IndexError, e:
-                print "IndexError" + str(e)
+                print "IndexError: " + str(e)
                 return 0,0,0
         
         except ValueError:
