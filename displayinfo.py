@@ -3,7 +3,7 @@
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
-# v1.0    XBMC 12 Frodo Release
+# v1.0    XBMC 12 Frodo Release [April 2014]
 # v1.1    ADD config.txt for Webserver
 # v2.0    XBMC 13 Gotham
 # v2.1    Bugfix: jsonrpc API - KeyError, IndexError
@@ -11,6 +11,7 @@
 # v3.0    Kodi 14 Release - Refactor Version
 #         Published GitHub 03.10.2015
 # v3.1    Watchmodus integration -> film (default), livetv [Asks the title more than once.]
+# v3.2    Optimization movie title -> MOVIETITLEFORMAT -> oneline (default), twoline [smaller font size and optimized for two lines]
 
 import os
 import sys
@@ -52,7 +53,8 @@ _ConfigDefault = {
     "display.resolution":       "320x240",   
     
     "config.screenmodus":       "time",
-    "config.watchmodus":        "film",    
+    "config.watchmodus":        "film",
+    "config.movietitleformat":  "oneline",  
                   
     "color.black":              BLACK,
     "color.white":              WHITE,
@@ -85,7 +87,15 @@ if configParser.has_option('CONFIG', 'WATCHMODUS'):
         _ConfigDefault['config.watchmodus'] = temp
     else:
         helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [CONFIG] WATCHMODUS not set correctly - default is activ!"   
+        print "Config [CONFIG] WATCHMODUS not set correctly - default is activ!"
+        
+if configParser.has_option('CONFIG', 'MOVIETITLEFORMAT'):
+    temp = configParser.get('CONFIG', 'MOVIETITLEFORMAT')
+    if temp=="oneline" or temp=="twoline":
+        _ConfigDefault['config.movietitleformat'] = temp
+    else:
+        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
+        print "Config [CONFIG] MOVIETITLEFORMAT not set correctly - default is activ!"  
         
 if configParser.has_option('DISPLAY', 'RESOLUTION'):
     temp = configParser.get('DISPLAY', 'RESOLUTION')
