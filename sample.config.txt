@@ -3,7 +3,7 @@
 SCREENMODUS = time
 #Watch Modus: film (default), livetv [Asks the title more than once.]
 WATCHMODUS = film
-#Movie title format: oneline (default), twoline 
+#Movie title format: oneline (default), twoline [Smaller font size in two lines]
 MOVIETITLEFORMAT = oneline
 
 [DISPLAY]
