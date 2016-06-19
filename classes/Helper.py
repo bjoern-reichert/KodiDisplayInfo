@@ -5,6 +5,37 @@ class Helper(object):
 	def __init__(self, _ConfigDefault):
 		self._ConfigDefault = _ConfigDefault
 	
+	def format_to_seconds(self, hours, minutes, seconds):
+		try:
+			if hours > 0:
+				hours = hours * 3600
+			if minutes > 0:
+				minutes = minutes * 60
+			return int(hours + minutes + seconds)
+		except ValueError:
+			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+			print 'Converting time to seconds has failed!'
+			return 0
+	
+	def format_to_minutes(self, hours, minutes):
+		try:
+			if hours > 0:
+				hours = hours * 60
+			return int(hours + minutes)
+		except ValueError:
+			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+			print 'Converting time to minutes has failed!'
+			return 0
+		
+	def format_to_string(self, hours, minutes, seconds):
+		try:
+			return str(hours).zfill(2)+":"+str(minutes).zfill(2)+":"+str(seconds).zfill(2)
+		except ValueError:
+			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+			print 'Padding time with zeroes has failed!'
+			return 0
+		
+	
 	#following from http://code.activestate.com/recipes/475186/
 	def has_colours(self, stream):
 		if not hasattr(stream, "isatty"):

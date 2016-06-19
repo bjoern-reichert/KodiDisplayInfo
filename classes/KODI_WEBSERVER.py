@@ -1,5 +1,6 @@
-import urllib
+import urllib2
 import json
+from socket import timeout
 
 class KODI_WEBSERVER:
     
@@ -13,20 +14,22 @@ class KODI_WEBSERVER:
         self.ip_port = 'http://'
         if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
             self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.user']+':'+self._ConfigDefault['KODI.webserver.pass']+'@'
-        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/jsonrpc?request='
+        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/jsonrpc'
         
-    def __format_to_minute(self, hours,minutes):
-        if hours > 0:
-            hours = hours * 60
-        return int(hours + minutes)
-        
-    def getJSON(self, jsonconfig):
+    def getJSON(self, jsondata, get_parameter = '?request='):
+        self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
         try:
-            self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
-            f = urllib.urlopen(self.ip_port+jsonconfig)
-            json_string = f.read()
-            return json.loads(json_string)
+            headers = {'content-type': 'application/json'}
+            json_data = json.dumps(json.loads(jsondata))
+            post_data = json_data.encode('utf-8')
+            request = urllib2.Request(self.ip_port + get_parameter, post_data, headers)
+            
+            result = urllib2.urlopen(request,timeout=3).read()
+            return json.loads(result.decode("utf-8"))
         except IOError:
+            self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
+            return json.loads('{"id":1,"jsonrpc":"2.0","result":[]}')
+        except timeout:
             self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
             return json.loads('{"id":1,"jsonrpc":"2.0","result":[]}')
         
@@ -44,14 +47,21 @@ class KODI_WEBSERVER:
             print 'Decoding JSON has failed'
             return ""
         
-    def KODI_GetItem(self, playerid):
+    def KODI_GetItem(self, playerid, playertype):
         try:
-            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
+            if playertype == "video":
+                player_params_id = "VideoGetItem"
+            elif playertype == "audio":
+                player_params_id = "AudioGetItem"
+            else:
+                return ""
+            
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title"], "playerid": '+str(playerid)+' }, "id": "'+str(player_params_id)+'"}')
             try:
-                video_title = parsed_json['result']['item']['title']
-                if video_title=="":
-                    video_title = parsed_json['result']['item']['label']
-                return video_title
+                title = parsed_json['result']['item']['title']
+                if title=="":
+                    title = parsed_json['result']['item']['label']
+                return title
             except KeyError:
                 return ""
             except IndexError:
@@ -66,10 +76,9 @@ class KODI_WEBSERVER:
             parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetProperties", "params": { "playerid": '+str(playerid)+', "properties": ["speed","time","totaltime"] }, "id": 1}')
             try:
                 speed = parsed_json['result']['speed']
-                minutes_time = self.__format_to_minute(parsed_json['result']['time']['hours'],parsed_json['result']['time']['minutes'])
-                minutes_timetotal = self.__format_to_minute(parsed_json['result']['totaltime']['hours'], parsed_json['result']['totaltime']['minutes'])
-
-                return speed, minutes_time, minutes_timetotal
+                media_time = [int(parsed_json['result']['time']['hours']),int(parsed_json['result']['time']['minutes']),int(parsed_json['result']['time']['seconds'])]
+                media_timetotal = [int(parsed_json['result']['totaltime']['hours']),int(parsed_json['result']['totaltime']['minutes']),int(parsed_json['result']['totaltime']['seconds'])]
+                return speed, media_time, media_timetotal
             except KeyError, e:
                 print "KeyError: " + str(e)
                 return 0,0,0

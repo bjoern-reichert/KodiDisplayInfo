@@ -1,10 +1,10 @@
 [CONFIG]
 #Screen Modus: time (default), later thumbnail
 SCREENMODUS = time
-#Watch Modus: film (default), livetv [Asks the title more than once.]
-WATCHMODUS = film
-#Movie title format: oneline (default), twoline [Smaller font size in two lines]
-MOVIETITLEFORMAT = oneline
+#Title format: oneline (default), twoline 
+TITLEFORMAT = oneline
+#Time format: minutes (default), kodi (00:00:00)
+TIMEFORMAT = minutes
 
 [DISPLAY]
 # Possible resolutions: 320x240 (default) or 480x272 or 480x320
@@ -12,7 +12,7 @@ RESOLUTION =
 # Set to your Framebuffer /dev/fb1 or /dev/fb2
 FBDEV = 
 
-# Setting find unter: Kodi : System → Settings → Services → Webserver
+# Setting find unter: Kodi : System → Settings → Services → Webserver → Allow control of Kodi via HTTP
 [KODI_WEBSERVER]
 # Set it to localhost or IP (192.168.2.101)
 HOST = localhost

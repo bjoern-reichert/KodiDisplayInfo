@@ -6,7 +6,7 @@ class DrawToDisplay_Default:
     _drawSetting = {}
     _drawSetting['startscreen.logo'] = ""
     _drawSetting['startscreen.clock.fontsize'] = 60
-    _drawSetting['startscreen.clock.height_margin'] = 80
+    _drawSetting['startscreen.clock.height_margin'] = 88
     
     default_info_text = ""
     default_info_color = ""
@@ -79,5 +79,3 @@ class DrawToDisplay_Default:
         self.screen.blit(self._drawSetting['startscreen.logo'],(x,y-10))
 
         self.displaytext(time_now.strftime("%H:%M:%S"), self._drawSetting['startscreen.clock.fontsize'], (self.screen.get_width()/2), (self.screen.get_height()/2)+self._drawSetting['startscreen.clock.height_margin'], 'none', (self._ConfigDefault['color.white']))
-        
-        return self._drawSetting['startscreen.logo'].get_rect(left=x, top=y-10)

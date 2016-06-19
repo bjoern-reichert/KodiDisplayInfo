@@ -10,8 +10,10 @@
 # v2.2    IF Player.GetItem title is empty check if label is set
 # v3.0    Kodi 14 Release - Refactor Version
 #         Published GitHub 03.10.2015
-# v3.1    Watchmodus integration -> film (default), livetv [Asks the title more than once.]
-# v3.2    Optimization movie title -> MOVIETITLEFORMAT -> oneline (default), twoline [smaller font size and optimized for two lines]
+# v3.2    Optimization movie title -> TITLEFORMAT -> oneline (default), twoline [smaller font size and optimized for two lines]
+# v3.3    Change the "time" and "totaltime" structure, screen draw optimization, new option -> TIMEFORMAT -> shows 6 minutes or 00:06:21 kodi
+# v3.4    Use the video structure for audio
+# v3.5    Delete v3.1
 
 import os
 import sys
@@ -53,8 +55,8 @@ _ConfigDefault = {
     "display.resolution":       "320x240",   
     
     "config.screenmodus":       "time",
-    "config.watchmodus":        "film",
-    "config.movietitleformat":  "oneline",  
+    "config.titleformat":       "oneline",
+    "config.timeformat":        "minutes", 
                   
     "color.black":              BLACK,
     "color.white":              WHITE,
@@ -80,22 +82,22 @@ if configParser.has_option('CONFIG', 'SCREENMODUS'):
     else:
         helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
         print "Config [CONFIG] SCREENMODUS not set correctly - default is activ!"
-     
-if configParser.has_option('CONFIG', 'WATCHMODUS'):
-    temp = configParser.get('CONFIG', 'WATCHMODUS')
-    if temp=="film" or temp=="livetv":
-        _ConfigDefault['config.watchmodus'] = temp
-    else:
-        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [CONFIG] WATCHMODUS not set correctly - default is activ!"
         
-if configParser.has_option('CONFIG', 'MOVIETITLEFORMAT'):
-    temp = configParser.get('CONFIG', 'MOVIETITLEFORMAT')
+if configParser.has_option('CONFIG', 'TITLEFORMAT'):
+    temp = configParser.get('CONFIG', 'TITLEFORMAT')
     if temp=="oneline" or temp=="twoline":
-        _ConfigDefault['config.movietitleformat'] = temp
+        _ConfigDefault['config.titleformat'] = temp
     else:
         helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [CONFIG] MOVIETITLEFORMAT not set correctly - default is activ!"  
+        print "Config [CONFIG] TITLEFORMAT not set correctly - default is activ!"
+        
+if configParser.has_option('CONFIG', 'TIMEFORMAT'):
+    temp = configParser.get('CONFIG', 'TIMEFORMAT')
+    if temp=="minutes" or temp=="kodi":
+        _ConfigDefault['config.timeformat'] = temp
+    else:
+        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
+        print "Config [CONFIG] TIMEFORMAT not set correctly - default is activ!" 
         
 if configParser.has_option('DISPLAY', 'RESOLUTION'):
     temp = configParser.get('DISPLAY', 'RESOLUTION')
@@ -135,7 +137,7 @@ def main_exit():
 
 def main():
     time_now = 0
-    video_title= ""
+    media_title = ""
 
     helper.printout("[info]    ", _ConfigDefault['mesg.cyan'])
     print "Start: KodiDisplayInfo"
@@ -144,14 +146,24 @@ def main():
     screen = pygame.display.set_mode(getattr(draw_default, 'Screen'+_ConfigDefault['display.resolution'])(), 0, 32)
     pygame.display.set_caption('KodiDisplayInfo')
     pygame.mouse.set_visible(0)
+    clock = pygame.time.Clock()
+    
+    RELOAD_SPEED = 750
+    
+    # create a bunch of events
+    reloaded_event = pygame.USEREVENT + 1
+    
+    # set timer for the event
+    pygame.time.set_timer(reloaded_event, RELOAD_SPEED)
     
     draw_default.setPygameScreen(pygame, screen)
     draw_videotime.setPygameScreen(pygame, screen, draw_default)
     
     running = True
     # run the game loop
-    try:
-        while running: 
+    try:        
+        while running:
+            clock.tick(4) # 4 x in one seconds
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -163,28 +175,23 @@ def main():
             screen.fill(_ConfigDefault['color.black']) #reset
             
             playerid, playertype = KODI_WEBSERVER.KODI_GetActivePlayers()
-            if playertype=="video" and int(playerid) > 0:    
-                if _ConfigDefault['config.watchmodus']=="livetv":
-                    video_title = KODI_WEBSERVER.KODI_GetItem(playerid)
-                else:
-                    if video_title == "":
-                        video_title = KODI_WEBSERVER.KODI_GetItem(playerid)
-                        helper.printout("[info]    ", _ConfigDefault['mesg.green'])
-                        print "Video: " +video_title
-                    
-                speed, minutes_time, minutes_timetotal = KODI_WEBSERVER.KODI_GetProperties(playerid) 
-                if minutes_timetotal>0:
-                    if _ConfigDefault['config.screenmodus']=="time":
-                        draw_videotime.drawProperties(video_title, time_now, speed, minutes_time, minutes_timetotal)
+            if playertype=="video" and int(playerid) >= 0:    
+                media_title = KODI_WEBSERVER.KODI_GetItem(playerid, playertype)
+                speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
+                if _ConfigDefault['config.screenmodus']=="time":
+                    draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+            elif playertype == "audio" and int(playerid) >= 0:
+                # Clone from Video
+                media_title = KODI_WEBSERVER.KODI_GetItem(playerid, playertype)
+                speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
+                if _ConfigDefault['config.screenmodus']=="time":
+                    draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
             else:
                 # API has nothing
-                video_title = ""
+                media_title = ""
                 draw_default.drawLogoStartScreen(time_now)
     
             pygame.display.flip()
-        
-            time.sleep(1)
-            pygame.display.update()
         
         helper.printout("[end]     ", _ConfigDefault['mesg.magenta'])
         print "bye ..."
