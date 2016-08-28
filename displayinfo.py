@@ -11,13 +11,14 @@
 # v3.0    Kodi 14 Release - Refactor Version
 #         Published GitHub 03.10.2015
 # v3.2    Optimization movie title -> TITLEFORMAT -> oneline (default), twoline [smaller font size and optimized for two lines]
+#         
 # v3.3    Change the "time" and "totaltime" structure, screen draw optimization, new option -> TIMEFORMAT -> shows 6 minutes or 00:06:21 kodi
-# v3.4    Use the video structure for audio
+#         -> ideas from Andrea Prunic <aprunic[at]gmail.com>
+# v3.4    Use the video structure for audio, update class KODI_WEBSERVER
 # v3.5    Delete v3.1
 
 import os
 import sys
-import time
 import datetime
 import pygame
 import ConfigParser
@@ -145,7 +146,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(getattr(draw_default, 'Screen'+_ConfigDefault['display.resolution'])(), 0, 32)
     pygame.display.set_caption('KodiDisplayInfo')
-    pygame.mouse.set_visible(0)
+    pygame.mouse.set_visible(1)
     clock = pygame.time.Clock()
     
     RELOAD_SPEED = 750
@@ -167,6 +168,8 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                #elif event.type == pygame.MOUSEBUTTONDOWN:
+                #    print "mouse at (%d, %d)" % event.pos
                 #elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 #    running = False
                 

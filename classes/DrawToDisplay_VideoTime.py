@@ -146,9 +146,8 @@ class DrawToDisplay_VideoTime:
 
         if self._ConfigDefault['config.timeformat']=="minutes":
             self.draw_default.displaytext(str(self.helper.format_to_minutes(media_time[0], media_time[1])), self._drawSetting['videoinfo.time.fontsize'], 62+self._drawSetting['videoinfo.time.margin_left'], margin_progessbar+self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
-            self.draw_default.displaytext(str(self.helper.format_to_seconds(media_totaltime[0], media_totaltime[1])), self._drawSetting['videoinfo.time.fontsize'], self.screen.get_width()-10, margin_progessbar+self._drawSetting['videoinfo.time.margin_top'], 'right', (self._ConfigDefault['color.white']))  
+            self.draw_default.displaytext(str(self.helper.format_to_minutes(media_totaltime[0], media_totaltime[1])), self._drawSetting['videoinfo.time.fontsize'], self.screen.get_width()-10, margin_progessbar+self._drawSetting['videoinfo.time.margin_top'], 'right', (self._ConfigDefault['color.white']))  
         elif self._ConfigDefault['config.timeformat']=="kodi":
-            
             fontsize = 53
             margintop = 15
             if self._ConfigDefault['display.resolution']=="320x240":

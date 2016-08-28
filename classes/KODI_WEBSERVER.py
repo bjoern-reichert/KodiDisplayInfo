@@ -81,12 +81,12 @@ class KODI_WEBSERVER:
                 return speed, media_time, media_timetotal
             except KeyError, e:
                 print "KeyError: " + str(e)
-                return 0,0,0
+                return 0,[0,0,0],[0,0,0]
             except IndexError, e:
                 print "IndexError: " + str(e)
-                return 0,0,0
+                return 0,[0,0,0],[0,0,0]
         
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             print 'Decoding JSON has failed'
-            return 0,0,0
+            return 0,[0,0,0],[0,0,0]
