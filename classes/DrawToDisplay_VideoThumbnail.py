@@ -19,10 +19,10 @@ class DrawToDisplay_VideoThumbnail:
     _drawSetting['videoinfo.title.fontsize'] = 43
     _drawSetting['videoinfo.title.height_margin'] = 4
     
-    _drawSetting['videoinfo.time_now.fontsize'] = 60
-    _drawSetting['videoinfo.time_now.height_margin'] = 68
-    _drawSetting['videoinfo.time_end.fontsize'] = 60
-    _drawSetting['videoinfo.time_end.height_margin'] = 68
+    _drawSetting['videoinfo.time_now.fontsize'] = 35
+    _drawSetting['videoinfo.time_now.height_margin'] = 16
+    _drawSetting['videoinfo.time_end.fontsize'] = 35
+    _drawSetting['videoinfo.time_end.height_margin'] = 54
     
     _drawSetting['videoinfo.time.fontsize'] = 64
     _drawSetting['videoinfo.time.margin_top'] = 67
@@ -65,10 +65,10 @@ class DrawToDisplay_VideoThumbnail:
         self._drawSetting['videoinfo.title.fontsize'] = 60
         self._drawSetting['videoinfo.title.height_margin'] = 5
     
-        self._drawSetting['videoinfo.time_now.fontsize'] = 80
-        self._drawSetting['videoinfo.time_now.height_margin'] = 86
-        self._drawSetting['videoinfo.time_end.fontsize'] = 58
-        self._drawSetting['videoinfo.time_end.height_margin'] = 64
+        self._drawSetting['videoinfo.time_now.fontsize'] = 60
+        self._drawSetting['videoinfo.time_now.height_margin'] = 9
+        self._drawSetting['videoinfo.time_end.fontsize'] = 60
+        self._drawSetting['videoinfo.time_end.height_margin'] = 76
         
         self._drawSetting['videoinfo.time.fontsize'] = 81
         self._drawSetting['videoinfo.time.margin_top'] = 83
@@ -88,10 +88,10 @@ class DrawToDisplay_VideoThumbnail:
         self._drawSetting['videoinfo.title.fontsize'] = 60
         self._drawSetting['videoinfo.title.height_margin'] = 5
     
-        self._drawSetting['videoinfo.time_now.fontsize'] = 80
-        self._drawSetting['videoinfo.time_now.height_margin'] = 86
-        self._drawSetting['videoinfo.time_end.fontsize'] = 58
-        self._drawSetting['videoinfo.time_end.height_margin'] = 64
+        self._drawSetting['videoinfo.time_now.fontsize'] = 60
+        self._drawSetting['videoinfo.time_now.height_margin'] = 9
+        self._drawSetting['videoinfo.time_end.fontsize'] = 60
+        self._drawSetting['videoinfo.time_end.height_margin'] = 76
         
         self._drawSetting['videoinfo.time.fontsize'] = 81
         self._drawSetting['videoinfo.time.margin_top'] = 83
@@ -137,15 +137,20 @@ class DrawToDisplay_VideoThumbnail:
     def drawProperties(self, video_title, time_now, speed, media_time, media_totaltime):        
         self.time = self.helper.format_to_seconds(media_time[0], media_time[1], media_time[2])
         self.totaltime = self.helper.format_to_seconds(media_totaltime[0], media_totaltime[1], media_totaltime[2])
-       
+
+        self.draw_default.displaytext(str(time_now.strftime("%H:%M")), self._drawSetting['videoinfo.time_now.fontsize'], self.screen.get_width()-10, (self.screen.get_height()/2)-self._drawSetting['videoinfo.time_now.height_margin'], 'right', (self._ConfigDefault['color.white']))
+        
         addtonow = time_now + timedelta(seconds=(self.totaltime-self.time))
-        self.draw_default.displaytext(str(addtonow.strftime("%H:%M")), self._drawSetting['videoinfo.time_end.fontsize'], self.screen.get_width()-10, (self.screen.get_height()/2)+(self._drawSetting['videoinfo.time_end.height_margin']/2), 'right', (self._ConfigDefault['color.white']))
+        self.draw_default.displaytext(str(addtonow.strftime("%H:%M")), self._drawSetting['videoinfo.time_end.fontsize'], self.screen.get_width()-10, (self.screen.get_height()/2)+self._drawSetting['videoinfo.time_end.height_margin'], 'right', (self._ConfigDefault['color.white']))
     
+        margin_left = 10
+        if self._ConfigDefault['display.resolution']=="320x240":
+            margin_left = 8
         margin_progessbar = self._drawSetting['videoinfo.progressbar.margin_left']+self._drawSetting['videoinfo.progressbar.width']
 
         if self._ConfigDefault['config.timeformat']=="minutes":
-            self.draw_default.displaytext(str(self.helper.format_to_minutes(media_time[0], media_time[1])), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+10, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
-            self.draw_default.displaytext(str(self.helper.format_to_minutes(media_totaltime[0], media_totaltime[1])), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+10, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))  
+            self.draw_default.displaytext(str(self.helper.format_to_minutes(media_time[0], media_time[1])), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
+            self.draw_default.displaytext(str(self.helper.format_to_minutes(media_totaltime[0], media_totaltime[1])), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))  
         elif self._ConfigDefault['config.timeformat']=="kodi":
             self._drawSetting['videoinfo.time.fontsize'] = 53
             self._drawSetting['videoinfo.time.margin_top'] = 58
@@ -155,8 +160,8 @@ class DrawToDisplay_VideoThumbnail:
                 self._drawSetting['videoinfo.time.margin_top'] = 41
                 self._drawSetting['videoinfo.time.margin_bottom'] = -3
             
-            self.draw_default.displaytext(self.helper.format_to_string(media_time[0], media_time[1], media_time[2]), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+10, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
-            self.draw_default.displaytext(self.helper.format_to_string(media_totaltime[0], media_totaltime[1], media_totaltime[2]), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+10, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))
+            self.draw_default.displaytext(self.helper.format_to_string(media_time[0], media_time[1], media_time[2]), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
+            self.draw_default.displaytext(self.helper.format_to_string(media_totaltime[0], media_totaltime[1], media_totaltime[2]), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))
                
         self.drawProgressBar()
                       

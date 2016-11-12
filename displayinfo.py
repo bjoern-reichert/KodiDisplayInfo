@@ -159,7 +159,8 @@ def main():
     pygame.time.set_timer(reloaded_event, RELOAD_SPEED)
     
     draw_default.setPygameScreen(pygame, screen)
-    draw_todisplay.setPygameScreen(pygame, screen, draw_default)
+    draw_videotime.setPygameScreen(pygame, screen, draw_default)
+    draw_videothumbnail.setPygameScreen(pygame, screen, draw_default)
     
     running_libery_id = -1
     running = True
@@ -184,19 +185,18 @@ def main():
                 media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItem(playerid, playertype)
                 speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
                 if _ConfigDefault['config.screenmodus']=="time":
-                    draw_todisplay.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+                    draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
                 elif _ConfigDefault['config.screenmodus']=="thumbnail":
                     if media_id!=running_libery_id:
                         running_libery_id=media_id
-                        draw_todisplay.setThumbnail(media_thumbnail)
+                        draw_videothumbnail.setThumbnail(media_thumbnail)
                     
-                    draw_todisplay.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+                    draw_videothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
             elif playertype == "audio" and int(playerid) >= 0:
                 # Clone from Video
                 media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItem(playerid, playertype)
                 speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
-                if _ConfigDefault['config.screenmodus']=="time":
-                    draw_todisplay.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+                draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
             else:
                 # API has nothing
                 running_libery_id = -1
@@ -215,11 +215,8 @@ def main():
 
 if __name__ == "__main__":
     draw_default = DrawToDisplay_Default(helper, _ConfigDefault)
-    
-    if _ConfigDefault['config.screenmodus']=="time":
-        draw_todisplay = DrawToDisplay_VideoTime(helper, _ConfigDefault)
-    elif _ConfigDefault['config.screenmodus']=="thumbnail":
-        draw_todisplay = DrawToDisplay_VideoThumbnail(helper, _ConfigDefault)
+    draw_videotime = DrawToDisplay_VideoTime(helper, _ConfigDefault)
+    draw_videothumbnail = DrawToDisplay_VideoThumbnail(helper, _ConfigDefault)       
     
     KODI_WEBSERVER = KODI_WEBSERVER(helper, _ConfigDefault, draw_default)
     main()
