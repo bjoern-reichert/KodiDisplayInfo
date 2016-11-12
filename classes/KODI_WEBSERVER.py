@@ -14,9 +14,9 @@ class KODI_WEBSERVER:
         self.ip_port = 'http://'
         if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
             self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.user']+':'+self._ConfigDefault['KODI.webserver.pass']+'@'
-        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/jsonrpc'
-        
-    def getJSON(self, jsondata, get_parameter = '?request='):
+        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/'
+       
+    def getJSON(self, jsondata, get_parameter = 'jsonrpc?request='):
         self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
         try:
             headers = {'content-type': 'application/json'}
@@ -54,22 +54,32 @@ class KODI_WEBSERVER:
             elif playertype == "audio":
                 player_params_id = "AudioGetItem"
             else:
-                return ""
+                return 0, "", ""
             
-            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title"], "playerid": '+str(playerid)+' }, "id": "'+str(player_params_id)+'"}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail"], "playerid": '+str(playerid)+' }, "id": "'+str(player_params_id)+'"}')
             try:
+                try:          
+                    mid = parsed_json['result']['item']['id']
+                except KeyError:
+                    mid = 0
+                
                 title = parsed_json['result']['item']['title']
                 if title=="":
                     title = parsed_json['result']['item']['label']
-                return title
+                
+                thumbnail = ""
+                if parsed_json['result']['item']['thumbnail']!="": # and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1
+                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1];
+
+                return mid, title, thumbnail
             except KeyError:
-                return ""
+                return -1, "", ""
             except IndexError:
-                return ""
+                return -1, "", ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             print 'Decoding JSON has failed'
-            return ""  
+            return -1, "", "" 
         
     def KODI_GetProperties(self, playerid):
         try:
