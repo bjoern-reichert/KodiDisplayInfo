@@ -1,9 +1,9 @@
 [CONFIG]
-#Screen Modus: time (default), later thumbnail
+#Screen Modus: time (default), thumbnail
 SCREENMODUS = time
 #Title format: oneline (default), twoline 
 TITLEFORMAT = oneline
-#Time format: minutes (default), kodi (00:00:00)
+#Time format: minutes (default), short (mm:ss), long (hh:mm:ss)
 TIMEFORMAT = minutes
 
 [DISPLAY]

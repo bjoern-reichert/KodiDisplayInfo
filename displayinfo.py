@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v3.0
+# KodiDisplayInfo v4.0
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -12,10 +12,12 @@
 #         Published GitHub 03.10.2015
 # v3.2    Optimization movie title -> TITLEFORMAT -> oneline (default), twoline [smaller font size and optimized for two lines]
 #         
-# v3.3    Change the "time" and "totaltime" structure, screen draw optimization, new option -> TIMEFORMAT -> shows 6 minutes or 00:06:21 kodi
+# v3.3    Change the "time" and "totaltime" structure, screen draw optimization, new option -> TIMEFORMAT -> shows 6 minutes or 00:06:21 long
 #         -> ideas from Andrea Prunic <aprunic[at]gmail.com>
 # v3.4    Use the video structure for audio, update class KODI_WEBSERVER
 # v3.5    Delete v3.1
+# v4.0    Add VideoThumbnail intergration -> SCREENMODUS = thumbnail
+# v4.1    Add TIMEFORMAT 06:21 short
 
 import os
 import sys
@@ -24,6 +26,7 @@ import pygame
 import ConfigParser
 from pygame.locals import *
 from classes.Helper import Helper
+from classes.HelperImage import HelperImage
 from classes.DrawToDisplay_Default import DrawToDisplay_Default
 from classes.DrawToDisplay_VideoTime import DrawToDisplay_VideoTime
 from classes.DrawToDisplay_VideoThumbnail import DrawToDisplay_VideoThumbnail
@@ -95,7 +98,7 @@ if configParser.has_option('CONFIG', 'TITLEFORMAT'):
         
 if configParser.has_option('CONFIG', 'TIMEFORMAT'):
     temp = configParser.get('CONFIG', 'TIMEFORMAT')
-    if temp=="minutes" or temp=="kodi":
+    if temp=="minutes" or temp=="short" or temp=="long":
         _ConfigDefault['config.timeformat'] = temp
     else:
         helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
@@ -158,6 +161,7 @@ def main():
     # set timer for the event
     pygame.time.set_timer(reloaded_event, RELOAD_SPEED)
     
+    image.setPygameScreen(pygame, screen)
     draw_default.setPygameScreen(pygame, screen)
     draw_videotime.setPygameScreen(pygame, screen, draw_default)
     draw_videothumbnail.setPygameScreen(pygame, screen, draw_default)
@@ -214,9 +218,10 @@ def main():
         main_exit()
 
 if __name__ == "__main__":
+    image = HelperImage()
     draw_default = DrawToDisplay_Default(helper, _ConfigDefault)
     draw_videotime = DrawToDisplay_VideoTime(helper, _ConfigDefault)
-    draw_videothumbnail = DrawToDisplay_VideoThumbnail(helper, _ConfigDefault)       
+    draw_videothumbnail = DrawToDisplay_VideoThumbnail(helper, image, _ConfigDefault)       
     
     KODI_WEBSERVER = KODI_WEBSERVER(helper, _ConfigDefault, draw_default)
     main()

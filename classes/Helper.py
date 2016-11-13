@@ -27,15 +27,17 @@ class Helper(object):
 			print 'Converting time to minutes has failed!'
 			return 0
 		
-	def format_to_string(self, hours, minutes, seconds):
+	def format_to_string(self, hours, minutes, seconds, modus = "long"):
 		try:
-			return str(hours).zfill(2)+":"+str(minutes).zfill(2)+":"+str(seconds).zfill(2)
+			if modus=="long":
+				return str(hours).zfill(2)+":"+str(minutes).zfill(2)+":"+str(seconds).zfill(2)
+			elif modus=="short":
+				return str(self.format_to_minutes(hours, minutes)).zfill(2)+":"+str(seconds).zfill(2)
 		except ValueError:
 			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
 			print 'Padding time with zeroes has failed!'
-			return 0
+			return ""
 		
-	
 	#following from http://code.activestate.com/recipes/475186/
 	def has_colours(self, stream):
 		if not hasattr(stream, "isatty"):

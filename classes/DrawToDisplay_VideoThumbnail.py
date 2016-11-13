@@ -1,10 +1,4 @@
-import cStringIO
-from PIL import Image
 from datetime import timedelta
-try:
-    from urllib2 import urlopen # Python2
-except ImportError:
-    from urllib.request import urlopen # Python3
 
 class DrawToDisplay_VideoThumbnail:
     
@@ -34,8 +28,9 @@ class DrawToDisplay_VideoThumbnail:
     
     thumbnail = ""
     
-    def __init__(self, helper, _ConfigDefault):
+    def __init__(self, helper, image, _ConfigDefault):
         self.helper = helper
+        self.image = image
         self._ConfigDefault = _ConfigDefault
         
     def setPygameScreen(self, pygame, screen, draw_default):
@@ -115,24 +110,7 @@ class DrawToDisplay_VideoThumbnail:
         max_width = self._drawSetting['videoinfo.progressbar.margin_left']-20
         max_heigth = self.screen.get_height()-20
 
-        self.thumbnail = ""
-        if url!="":
-            try:
-                #load
-                file = urlopen(url)
-                im = cStringIO.StringIO(file.read())
-                image = Image.open(im)
-        
-                #resize
-                image = image.resize((max_width,max_heigth), Image.ANTIALIAS)
-                
-                # convert
-                mode = image.mode
-                size = image.size
-                data = image.tobytes()
-                self.thumbnail = self.pygame.image.fromstring(data, size, mode)
-            except IOError:
-                self.thumbnail = ""
+        self.thumbnail = self.image.scaleImage(url, max_width, max_heigth)
                 
     def drawProperties(self, video_title, time_now, speed, media_time, media_totaltime):        
         self.time = self.helper.format_to_seconds(media_time[0], media_time[1], media_time[2])
@@ -151,17 +129,17 @@ class DrawToDisplay_VideoThumbnail:
         if self._ConfigDefault['config.timeformat']=="minutes":
             self.draw_default.displaytext(str(self.helper.format_to_minutes(media_time[0], media_time[1])), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
             self.draw_default.displaytext(str(self.helper.format_to_minutes(media_totaltime[0], media_totaltime[1])), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))  
-        elif self._ConfigDefault['config.timeformat']=="kodi":
-            self._drawSetting['videoinfo.time.fontsize'] = 53
-            self._drawSetting['videoinfo.time.margin_top'] = 58
+        elif self._ConfigDefault['config.timeformat']=="short" or self._ConfigDefault['config.timeformat']=="long":
+            self._drawSetting['videoinfo.time.fontsize'] = 59
+            self._drawSetting['videoinfo.time.margin_top'] = 64
             self._drawSetting['videoinfo.time.margin_bottom'] = 0
             if self._ConfigDefault['display.resolution']=="320x240":
                 self._drawSetting['videoinfo.time.fontsize'] = 34
                 self._drawSetting['videoinfo.time.margin_top'] = 41
                 self._drawSetting['videoinfo.time.margin_bottom'] = -3
-            
-            self.draw_default.displaytext(self.helper.format_to_string(media_time[0], media_time[1], media_time[2]), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
-            self.draw_default.displaytext(self.helper.format_to_string(media_totaltime[0], media_totaltime[1], media_totaltime[2]), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))
+
+            self.draw_default.displaytext(self.helper.format_to_string(media_time[0], media_time[1], media_time[2], self._ConfigDefault['config.timeformat']), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self._drawSetting['videoinfo.time.margin_top'], 'left', (self._ConfigDefault['color.white']))
+            self.draw_default.displaytext(self.helper.format_to_string(media_totaltime[0], media_totaltime[1], media_totaltime[2], self._ConfigDefault['config.timeformat']), self._drawSetting['videoinfo.time.fontsize'], margin_progessbar+margin_left, self.screen.get_height()+self._drawSetting['videoinfo.time.margin_bottom'], 'left', (self._ConfigDefault['color.white']))
                
         self.drawProgressBar()
                       
