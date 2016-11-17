@@ -76,3 +76,33 @@ class Helper(object):
 			self.printout("[error]   ", self._ConfigDefault['mesg.red'])
 			print "Color Error RGB! " + str(text)
 			exit()
+			
+	#following from http://pygame.org/wiki/TextWrapping
+	def truncline(self, text, font, maxwidth):
+		real=len(text)	   
+		stext=text		   
+		l=font.size(text)[0]
+		cut=0
+		a=0				  
+		done=1
+		while l > maxwidth:
+			a=a+1
+			n=text.rsplit(None, a)[0]
+			if stext == n:
+				cut += 1
+				stext= n[:-cut]
+			else:
+				stext = n
+			l=font.size(stext)[0]
+			real=len(stext)			   
+			done=0						
+		return real, done, stext			 
+		
+	def wrapline(self, text, font, maxwidth): 
+		done=0					  
+		wrapped=[]
+		while not done:			 
+			nl, done, stext=self.truncline(text, font, maxwidth) 
+			wrapped.append(stext.strip())				  
+			text=text[nl:]								 
+		return wrapped

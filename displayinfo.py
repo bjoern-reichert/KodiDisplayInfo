@@ -23,13 +23,14 @@ import os
 import sys
 import datetime
 import pygame
-import ConfigParser
 from pygame.locals import *
+from classes.HelperConfig import HelperConfig
 from classes.Helper import Helper
 from classes.HelperImage import HelperImage
 from classes.DrawToDisplay_Default import DrawToDisplay_Default
 from classes.DrawToDisplay_VideoTime import DrawToDisplay_VideoTime
 from classes.DrawToDisplay_VideoThumbnail import DrawToDisplay_VideoThumbnail
+from classes.DrawToDisplay_AudioThumbnail import DrawToDisplay_AudioThumbnail
 from classes.KODI_WEBSERVER import KODI_WEBSERVER
 
 basedirpath = os.path.dirname(os.path.realpath(__file__)) + os.sep
@@ -39,6 +40,7 @@ WHITE = (255,255,255)
 RED = (255,0,0)
 ORANGE = (255,114,0)
 GREEN = (0,255,0)
+GREY = (153,153,153)
 
 _ConfigDefault = {
     "basedirpath":              basedirpath,
@@ -59,82 +61,24 @@ _ConfigDefault = {
     
     "display.resolution":       "320x240",   
     
-    "config.screenmodus":       "time",
-    "config.titleformat":       "oneline",
-    "config.timeformat":        "minutes", 
+    "config.screenmodus_video":           "time",
+    "config.formattime_video":            "minutes",
+    "config.screenmodus_audio":           "thumbnail",
+    "config.formattime_audio":            "short",
                   
     "color.black":              BLACK,
     "color.white":              WHITE,
     "color.red":                RED,
     "color.orange":             ORANGE,
-    "color.green":              GREEN
+    "color.green":              GREEN,
+    "color.grey":               GREY
     }
 
 helper = Helper(_ConfigDefault)
 
-# init config
-helper.printout("[info]    ", _ConfigDefault['mesg.green'])
-print "Parse Config"
-configParser = ConfigParser.RawConfigParser()   
-configFilePath = r''+basedirpath+'config.txt'
-configParser.read(configFilePath)
-
-# check config
-if configParser.has_option('CONFIG', 'SCREENMODUS'):
-    temp = configParser.get('CONFIG', 'SCREENMODUS')
-    if temp=="time" or temp=="thumbnail":
-        _ConfigDefault['config.screenmodus'] = temp
-    else:
-        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [CONFIG] SCREENMODUS not set correctly - default is activ!"
-        
-if configParser.has_option('CONFIG', 'TITLEFORMAT'):
-    temp = configParser.get('CONFIG', 'TITLEFORMAT')
-    if temp=="oneline" or temp=="twoline":
-        _ConfigDefault['config.titleformat'] = temp
-    else:
-        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [CONFIG] TITLEFORMAT not set correctly - default is activ!"
-        
-if configParser.has_option('CONFIG', 'TIMEFORMAT'):
-    temp = configParser.get('CONFIG', 'TIMEFORMAT')
-    if temp=="minutes" or temp=="short" or temp=="long":
-        _ConfigDefault['config.timeformat'] = temp
-    else:
-        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [CONFIG] TIMEFORMAT not set correctly - default is activ!" 
-        
-if configParser.has_option('DISPLAY', 'RESOLUTION'):
-    temp = configParser.get('DISPLAY', 'RESOLUTION')
-    if temp=="320x240" or temp=="480x272" or temp=="480x320":
-        _ConfigDefault['display.resolution'] = temp
-    else:
-        helper.printout("[warning]    ", _ConfigDefault['mesg.yellow'])
-        print "Config [DISPLAY] RESOLUTION not set correctly - default is activ!"
-
-if configParser.has_option('KODI_WEBSERVER', 'HOST'):
-    _ConfigDefault['KODI.webserver.host'] = configParser.get('KODI_WEBSERVER', 'HOST')
-if configParser.has_option('KODI_WEBSERVER', 'PORT'):
-    _ConfigDefault['KODI.webserver.port'] = configParser.get('KODI_WEBSERVER', 'PORT')
-if configParser.has_option('KODI_WEBSERVER', 'USER'):
-    _ConfigDefault['KODI.webserver.user'] = configParser.get('KODI_WEBSERVER', 'USER')
-if configParser.has_option('KODI_WEBSERVER', 'PASS'):
-    _ConfigDefault['KODI.webserver.pass'] = configParser.get('KODI_WEBSERVER', 'PASS')        
-        
-if configParser.has_option('COLOR', 'BLACK'):
-    _ConfigDefault['color.black'] = helper.HTMLColorToRGB(configParser.get('COLOR', 'BLACK'))
-if configParser.has_option('COLOR', 'WHITE'):
-    _ConfigDefault['color.white'] = helper.HTMLColorToRGB(configParser.get('COLOR', 'WHITE'))
-if configParser.has_option('COLOR', 'RED'):
-    _ConfigDefault['color.red'] = helper.HTMLColorToRGB(configParser.get('COLOR', 'RED'))
-if configParser.has_option('COLOR', 'GREEN'):
-    _ConfigDefault['color.green'] = helper.HTMLColorToRGB(configParser.get('COLOR', 'GREEN'))
-if configParser.has_option('COLOR', 'ORANGE'):
-    _ConfigDefault['color.orange'] = helper.HTMLColorToRGB(configParser.get('COLOR', 'ORANGE'))
-
-#Display FB
-if configParser.get('DISPLAY', 'FBDEV')!="":
-    os.environ["SDL_FBDEV"] = configParser.get('DISPLAY', 'FBDEV')
+# init config && check config
+helperconfig = HelperConfig(helper, _ConfigDefault, basedirpath)
+_ConfigDefault = helperconfig.parseConfig();
 
 def main_exit():
     pygame.quit()
@@ -165,6 +109,7 @@ def main():
     draw_default.setPygameScreen(pygame, screen)
     draw_videotime.setPygameScreen(pygame, screen, draw_default)
     draw_videothumbnail.setPygameScreen(pygame, screen, draw_default)
+    draw_audiothumbnail.setPygameScreen(pygame, screen, draw_default)
     
     running_libery_id = -1
     running = True
@@ -185,22 +130,27 @@ def main():
             screen.fill(_ConfigDefault['color.black']) #reset
             
             playerid, playertype = KODI_WEBSERVER.KODI_GetActivePlayers()
-            if playertype=="video" and int(playerid) >= 0:    
-                media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItem(playerid, playertype)
-                speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
-                if _ConfigDefault['config.screenmodus']=="time":
-                    draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
-                elif _ConfigDefault['config.screenmodus']=="thumbnail":
-                    if media_id!=running_libery_id:
-                        running_libery_id=media_id
-                        draw_videothumbnail.setThumbnail(media_thumbnail)
-                    
-                    draw_videothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
-            elif playertype == "audio" and int(playerid) >= 0:
-                # Clone from Video
-                media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItem(playerid, playertype)
-                speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
-                draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+            if int(playerid) >= 0:
+                if playertype=="video":    
+                    media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItemVideo(playerid)
+                    speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
+                    if _ConfigDefault['config.screenmodus_video']=="time":
+                        draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+                    elif _ConfigDefault['config.screenmodus_video']=="thumbnail":
+                        if media_id!=running_libery_id:
+                            running_libery_id=media_id
+                            draw_videothumbnail.setThumbnail(media_thumbnail)
+                        
+                        draw_videothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
+                elif playertype == "audio":
+                    media_id, media_title, media_thumbnail, media_album, media_artist = KODI_WEBSERVER.KODI_GetItemAudio(playerid)
+                    speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
+                    if _ConfigDefault['config.screenmodus_audio']=="thumbnail":
+                        if media_id!=running_libery_id:
+                            running_libery_id=media_id
+                            draw_audiothumbnail.setThumbnail(media_thumbnail)
+                        
+                        draw_audiothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime, media_album, media_artist)
             else:
                 # API has nothing
                 running_libery_id = -1
@@ -221,7 +171,8 @@ if __name__ == "__main__":
     image = HelperImage()
     draw_default = DrawToDisplay_Default(helper, _ConfigDefault)
     draw_videotime = DrawToDisplay_VideoTime(helper, _ConfigDefault)
-    draw_videothumbnail = DrawToDisplay_VideoThumbnail(helper, image, _ConfigDefault)       
+    draw_videothumbnail = DrawToDisplay_VideoThumbnail(helper, image, _ConfigDefault)      
+    draw_audiothumbnail = DrawToDisplay_AudioThumbnail(helper, image, _ConfigDefault)  
     
     KODI_WEBSERVER = KODI_WEBSERVER(helper, _ConfigDefault, draw_default)
     main()

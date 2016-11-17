@@ -39,24 +39,17 @@ class KODI_WEBSERVER:
             try:
                 return parsed_json['result'][0]['playerid'], parsed_json['result'][0]['type']
             except KeyError:
-                return 0, ""
+                return -1, ""
             except IndexError:
-                return 0, ""
+                return -1, ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             print 'Decoding JSON has failed'
-            return ""
+            return -1, ""
         
-    def KODI_GetItem(self, playerid, playertype):
-        try:
-            if playertype == "video":
-                player_params_id = "VideoGetItem"
-            elif playertype == "audio":
-                player_params_id = "AudioGetItem"
-            else:
-                return 0, "", ""
-            
-            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail"], "playerid": '+str(playerid)+' }, "id": "'+str(player_params_id)+'"}')
+    def KODI_GetItemVideo(self, playerid):
+        try:           
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
             try:
                 try:          
                     mid = parsed_json['result']['item']['id']
@@ -68,8 +61,10 @@ class KODI_WEBSERVER:
                     title = parsed_json['result']['item']['label']
                 
                 thumbnail = ""
-                if parsed_json['result']['item']['thumbnail']!="": # and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1
+                if parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
                     thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1];
+                else:
+                    thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
 
                 return mid, title, thumbnail
             except KeyError:
@@ -79,7 +74,41 @@ class KODI_WEBSERVER:
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             print 'Decoding JSON has failed'
-            return -1, "", "" 
+            return -1, "", ""
+        
+    def KODI_GetItemAudio(self, playerid):
+        try:            
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "album", "artist", "track", "thumbnail"], "playerid": '+str(playerid)+' }, "id": "AudioGetItem"}')
+            try:
+                try:          
+                    mid = parsed_json['result']['item']['id']
+                except KeyError:
+                    mid = 0
+                
+                track = parsed_json['result']['item']['track']
+                
+                title = parsed_json['result']['item']['title']
+                if title=="":
+                    title = parsed_json['result']['item']['label']
+                
+                thumbnail = ""
+                if parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
+                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1];
+                else:
+                    thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
+                    
+                album = parsed_json['result']['item']['album']
+                artist = ', '.join(parsed_json['result']['item']['artist'])
+
+                return mid, str(track)+'. '+title, thumbnail, album, artist
+            except KeyError:
+                return -1, "", "", "", ""
+            except IndexError:
+                return -1, "", "", "", ""
+        except ValueError:
+            self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+            print 'Decoding JSON has failed'
+            return -1, "", "", "", ""
         
     def KODI_GetProperties(self, playerid):
         try:

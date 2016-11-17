@@ -16,7 +16,11 @@ class HelperImage():
         if url!="":
             try:
                 #load
-                im = cStringIO.StringIO(urlopen(url).read())
+                if url.startswith('http://'):
+                    im = cStringIO.StringIO(urlopen(url).read())
+                else:
+                    im = url
+                
                 image_resize = Image.open(im)
         
                 #resize
