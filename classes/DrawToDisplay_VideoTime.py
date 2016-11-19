@@ -96,7 +96,7 @@ class DrawToDisplay_VideoTime:
     def wraplines(self, title, fontsize):
         width_text = self.screen.get_width()-20
         font=self.pygame.font.Font(self._ConfigDefault['basedirpath']+"fonts/MC360.ttf", fontsize)
-        return self.helper.wrapline(str(title), font, width_text)
+        return self.helper.wrapline(title, font, width_text)
         
     def drawProperties(self, video_title, time_now, speed, media_time, media_totaltime):
         margin_top = 0
@@ -104,7 +104,7 @@ class DrawToDisplay_VideoTime:
         
         self.time = self.helper.format_to_seconds(media_time[0], media_time[1], media_time[2])
         self.totaltime = self.helper.format_to_seconds(media_totaltime[0], media_totaltime[1], media_totaltime[2])
-        
+
         lines = self.wraplines(video_title, self._drawSetting['videoinfo.title.fontsize'])
         if len(lines)>1:  
             if self._ConfigDefault['display.resolution']=="480x320":
@@ -121,7 +121,7 @@ class DrawToDisplay_VideoTime:
                 margin_top = -16
                 second_title_height_margin = -36
                 lines = self.wraplines(video_title, videoinfo_title_fontsize)
-            
+             
             lines = lines[0:2]
             lines.reverse()
             for (i, line) in enumerate(lines):

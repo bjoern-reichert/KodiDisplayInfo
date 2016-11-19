@@ -29,7 +29,7 @@ class HelperConfig:
         if self.configParser.has_option('CONFIG', 'FORMATTIME_VIDEO'):
             temp = self.configParser.get('CONFIG', 'FORMATTIME_VIDEO')
             if temp=="minutes" or temp=="short" or temp=="long":
-                self._ConfigDefault['config.timeformat'] = temp
+                self._ConfigDefault['config.formattime_video'] = temp
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
                 print "Config [CONFIG] FORMATTIME_VIDEO not set correctly - default is activ!"

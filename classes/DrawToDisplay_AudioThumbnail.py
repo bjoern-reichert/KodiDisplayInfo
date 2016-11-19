@@ -141,7 +141,7 @@ class DrawToDisplay_AudioThumbnail:
         self.draw_default.displaytext(media_album, 24, image_width_height+5, self._drawSetting['videoinfo.margin_top_media_album'], 'left', (self._ConfigDefault['color.white']))
         
         font=self.pygame.font.Font(self._ConfigDefault['basedirpath']+"fonts/MC360.ttf", 24)
-        lines_artist = self.helper.wrapline(str(media_artist), font, width_text)
+        lines_artist = self.helper.wrapline(media_artist, font, width_text)
         
         lines_artist_index = 0
         for (i, line) in enumerate(lines_artist):
@@ -151,7 +151,7 @@ class DrawToDisplay_AudioThumbnail:
             lines_artist_index = lines_artist_index + 1
         
         font=self.pygame.font.Font(self._ConfigDefault['basedirpath']+"fonts/MC360.ttf", 28)
-        lines = self.helper.wrapline(str(media_title), font, width_text)
+        lines = self.helper.wrapline(media_title, font, width_text)
         
         for (i, line) in enumerate(lines):
             if lines_artist_index>1:
