@@ -1,6 +1,9 @@
-import urllib2
 import json
 from socket import timeout
+try:
+    import urllib2 as urllibopen # Python2
+except ImportError:
+    import urllib.request as urllibopen # Python3
 
 class KODI_WEBSERVER:
     
@@ -22,9 +25,9 @@ class KODI_WEBSERVER:
             headers = {'content-type': 'application/json'}
             json_data = json.dumps(json.loads(jsondata))
             post_data = json_data.encode('utf-8')
-            request = urllib2.Request(self.ip_port + get_parameter, post_data, headers)
+            request = urllibopen.Request(self.ip_port + get_parameter, post_data, headers)
             
-            result = urllib2.urlopen(request,timeout=3).read()
+            result = urllibopen.urlopen(request,timeout=3).read()
             return json.loads(result.decode("utf-8"))
         except IOError:
             self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
@@ -44,7 +47,7 @@ class KODI_WEBSERVER:
                 return -1, ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-            print 'Decoding JSON has failed'
+            self.helper.printout('Decoding JSON has failed')
             return -1, ""
         
     def KODI_GetItemVideo(self, playerid):
@@ -62,10 +65,10 @@ class KODI_WEBSERVER:
                 
                 thumbnail = ""
                 if parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
-                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1];
+                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
                 else:
                     thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
-
+                    
                 return mid, title, thumbnail
             except KeyError:
                 return -1, "", ""
@@ -73,7 +76,7 @@ class KODI_WEBSERVER:
                 return -1, "", ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-            print 'Decoding JSON has failed'
+            self.helper.printout('Decoding JSON has failed')
             return -1, "", ""
         
     def KODI_GetItemAudio(self, playerid):
@@ -93,7 +96,7 @@ class KODI_WEBSERVER:
                 
                 thumbnail = ""
                 if parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
-                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1];
+                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
                 else:
                     thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
                     
@@ -107,7 +110,7 @@ class KODI_WEBSERVER:
                 return -1, "", "", "", ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-            print 'Decoding JSON has failed'
+            self.helper.printout('Decoding JSON has failed')
             return -1, "", "", "", ""
         
     def KODI_GetProperties(self, playerid):
@@ -118,14 +121,14 @@ class KODI_WEBSERVER:
                 media_time = [int(parsed_json['result']['time']['hours']),int(parsed_json['result']['time']['minutes']),int(parsed_json['result']['time']['seconds'])]
                 media_timetotal = [int(parsed_json['result']['totaltime']['hours']),int(parsed_json['result']['totaltime']['minutes']),int(parsed_json['result']['totaltime']['seconds'])]
                 return speed, media_time, media_timetotal
-            except KeyError, e:
-                print "KeyError: " + str(e)
+            except KeyError as e:
+                self.helper.printout("KeyError: " + str(e))
                 return 0,[0,0,0],[0,0,0]
-            except IndexError, e:
-                print "IndexError: " + str(e)
+            except IndexError as e:
+                self.helper.printout("IndexError: " + str(e))
                 return 0,[0,0,0],[0,0,0]
         
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-            print 'Decoding JSON has failed'
+            self.helper.printout('Decoding JSON has failed')
             return 0,[0,0,0],[0,0,0]

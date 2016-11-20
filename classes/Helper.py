@@ -14,7 +14,7 @@ class Helper(object):
 			return int(hours + minutes + seconds)
 		except ValueError:
 			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-			print 'Converting time to seconds has failed!'
+			self.printout('Converting time to seconds has failed!')
 			return 0
 	
 	def format_to_minutes(self, hours, minutes):
@@ -24,7 +24,7 @@ class Helper(object):
 			return int(hours + minutes)
 		except ValueError:
 			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-			print 'Converting time to minutes has failed!'
+			self.printout('Converting time to minutes has failed!')
 			return 0
 		
 	def format_to_string(self, hours, minutes, seconds, modus = "long"):
@@ -35,7 +35,7 @@ class Helper(object):
 				return str(self.format_to_minutes(hours, minutes)).zfill(2)+":"+str(seconds).zfill(2)
 		except ValueError:
 			self.printout("[warning]    ", self._ConfigDefault['mesg.red'])
-			print 'Padding time with zeroes has failed!'
+			self.printout('Padding time with zeroes has failed!')
 			return ""
 		
 	#following from http://code.activestate.com/recipes/475186/
@@ -52,14 +52,14 @@ class Helper(object):
 			# guess false in case of error
 			return False
 	
-	def printout(self, text, colour):
+	def printout(self, text, colour=""):
 		if not colour:
 			colour=self._ConfigDefault['mesg.white']
 		if self.has_colours(sys.stdout):
 			seq = "\x1b[1;%dm" % (colour) + text + "\x1b[0m"
 			sys.stdout.write(seq)
 		else:
-			sys.stdout.write(text)
+			sys.stdout.write(text+"\n")
 			
 	#following from http://code.activestate.com/recipes/266466/
 	def HTMLColorToRGB(self, colorstring):
@@ -68,13 +68,13 @@ class Helper(object):
 			colorstring = colorstring.strip()
 			if colorstring[0] == '#': colorstring = colorstring[1:]
 			if len(colorstring) != 6:
-				raise ValueError, "input #%s is not in #RRGGBB format" % colorstring
+				self.printout("input #"+colorstring+" is not in #RRGGBB format")
 			r, g, b = colorstring[:2], colorstring[2:4], colorstring[4:]
 			r, g, b = [int(n, 16) for n in (r, g, b)]
 			return (r, g, b)
 		except ValueError as text:
 			self.printout("[error]   ", self._ConfigDefault['mesg.red'])
-			print "Color Error RGB! " + str(text)
+			self.printout("Color Error RGB! " + str(text))
 			exit()
 			
 	#following from http://pygame.org/wiki/TextWrapping

@@ -1,9 +1,9 @@
-import cStringIO
 from PIL import Image
+import io
 try:
-    from urllib2 import urlopen # Python2
+    import urllib2 as urllibopen # Python2
 except ImportError:
-    from urllib.request import urlopen # Python3
+    import urllib.request as urllibopen # Python3
     
 class HelperImage():
     
@@ -17,7 +17,7 @@ class HelperImage():
             try:
                 #load
                 if url.startswith('http://'):
-                    im = cStringIO.StringIO(urlopen(url).read())
+                    im = io.BytesIO(urllibopen.urlopen(url).read())
                 else:
                     im = url
                 

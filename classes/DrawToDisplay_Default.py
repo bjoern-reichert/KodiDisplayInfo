@@ -16,7 +16,7 @@ class DrawToDisplay_Default:
         self._ConfigDefault = _ConfigDefault
         
         self.helper.printout("[info]    ", self._ConfigDefault['mesg.green'])
-        print "Screen Setup  " + str(self._ConfigDefault['display.resolution'])
+        self.helper.printout("Screen Setup  " + str(self._ConfigDefault['display.resolution']))
         
     def setPygameScreen(self, pygame, screen):
         self.pygame = pygame

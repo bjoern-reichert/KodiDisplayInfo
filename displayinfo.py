@@ -17,7 +17,10 @@
 # v3.4    Use the video structure for audio, update class KODI_WEBSERVER
 # v3.5    Delete v3.1
 # v4.0    Add VideoThumbnail intergration -> SCREENMODUS = thumbnail
-# v4.1    Add TIMEFORMAT 06:21 short
+# v4.1    Add AudioThumbnail and HelperImage
+# v4.2    Add TIMEFORMAT 06:21 short
+# v4.3    Config optimization, UnicodeEncodeError Fix
+# v5.0    Python 2 and Python 3 compatible
 
 import os
 import sys
@@ -89,7 +92,7 @@ def main():
     media_title = ""
 
     helper.printout("[info]    ", _ConfigDefault['mesg.cyan'])
-    print "Start: KodiDisplayInfo"
+    helper.printout("Start: KodiDisplayInfo")
     
     pygame.init()
     screen = pygame.display.set_mode(getattr(draw_default, 'Screen'+_ConfigDefault['display.resolution'])(), 0, 32)
@@ -120,10 +123,6 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                #elif event.type == pygame.MOUSEBUTTONDOWN:
-                #    print "mouse at (%d, %d)" % event.pos
-                #elif event.type == KEYDOWN and event.key == K_ESCAPE:
-                #    running = False
                 
             time_now = datetime.datetime.now()
             #start draw
@@ -160,7 +159,7 @@ def main():
             pygame.display.flip()
         
         helper.printout("[end]     ", _ConfigDefault['mesg.magenta'])
-        print "bye ..."
+        helper.printout("bye ...")
         main_exit()
     except SystemExit:
         main_exit()

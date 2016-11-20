@@ -1,5 +1,8 @@
 import os
-import ConfigParser
+try:
+    import ConfigParser as configparser # Python2
+except ImportError:
+    import configparser # Python3
 
 class HelperConfig:
     
@@ -7,9 +10,9 @@ class HelperConfig:
         self.helper = helper
         self._ConfigDefault = _ConfigDefault
         
-        helper.printout("[info]    ", _ConfigDefault['mesg.green'])
-        print "Parse Config"
-        self.configParser = ConfigParser.RawConfigParser()   
+        self.helper.printout("[info]    ", _ConfigDefault['mesg.green'])
+        self.helper.printout("Parse Config")
+        self.configParser = configparser.RawConfigParser()   
         configFilePath = r''+basedirpath+'config.txt'
         self.configParser.read(configFilePath)
         
@@ -24,7 +27,7 @@ class HelperConfig:
                 self._ConfigDefault['config.screenmodus_video'] = temp
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
-                print "Config [CONFIG] SCREENMODUS_VIDEO not set correctly - default is activ!"
+                self.helper.printout("Config [CONFIG] SCREENMODUS_VIDEO not set correctly - default is activ!")
                 
         if self.configParser.has_option('CONFIG', 'FORMATTIME_VIDEO'):
             temp = self.configParser.get('CONFIG', 'FORMATTIME_VIDEO')
@@ -32,7 +35,7 @@ class HelperConfig:
                 self._ConfigDefault['config.formattime_video'] = temp
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
-                print "Config [CONFIG] FORMATTIME_VIDEO not set correctly - default is activ!"
+                self.helper.printout("Config [CONFIG] FORMATTIME_VIDEO not set correctly - default is activ!")
                 
         if self.configParser.has_option('CONFIG', 'SCREENMODUS_AUDIO'):
             temp = self.configParser.get('CONFIG', 'SCREENMODUS_AUDIO')
@@ -40,7 +43,7 @@ class HelperConfig:
                 self._ConfigDefault['config.screenmodus_audio'] = temp
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
-                print "Config [CONFIG] SCREENMODUS_VIDEO not set correctly - default is activ!"
+                self.helper.printout("Config [CONFIG] SCREENMODUS_VIDEO not set correctly - default is activ!")
                 
         if self.configParser.has_option('CONFIG', 'FORMATTIME_AUDIO'):
             temp = self.configParser.get('CONFIG', 'FORMATTIME_AUDIO')
@@ -48,7 +51,7 @@ class HelperConfig:
                 self._ConfigDefault['config.formattime_audio'] = temp
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
-                print "Config [CONFIG] FORMATTIME_AUDIO not set correctly - default is activ!"
+                self.helper.printout("Config [CONFIG] FORMATTIME_AUDIO not set correctly - default is activ!")
                 
         if self.configParser.has_option('DISPLAY', 'RESOLUTION'):
             temp = self.configParser.get('DISPLAY', 'RESOLUTION')
@@ -56,7 +59,7 @@ class HelperConfig:
                 self._ConfigDefault['display.resolution'] = temp
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
-                print "Config [DISPLAY] RESOLUTION not set correctly - default is activ!"
+                self.helper.printout("Config [DISPLAY] RESOLUTION not set correctly - default is activ!")
         
         if self.configParser.has_option('KODI_WEBSERVER', 'HOST'):
             self._ConfigDefault['KODI.webserver.host'] = self.configParser.get('KODI_WEBSERVER', 'HOST')
