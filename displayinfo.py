@@ -90,13 +90,15 @@ def main_exit():
 def main():
     time_now = 0
     media_title = ""
+    version = ".".join(map(str, sys.version_info[:3]))
+    helper.printout("Python "+ version)
 
     helper.printout("[info]    ", _ConfigDefault['mesg.cyan'])
     helper.printout("Start: KodiDisplayInfo")
     
     pygame.init()
     screen = pygame.display.set_mode(getattr(draw_default, 'Screen'+_ConfigDefault['display.resolution'])(), 0, 32)
-    pygame.display.set_caption('KodiDisplayInfo')
+    pygame.display.set_caption('KodiDisplayInfo - Python '+ version)
     pygame.mouse.set_visible(1)
     clock = pygame.time.Clock()
     
