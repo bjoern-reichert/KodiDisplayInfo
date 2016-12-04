@@ -68,6 +68,8 @@ _ConfigDefault = {
     "config.formattime_video":            "minutes",
     "config.screenmodus_audio":           "thumbnail",
     "config.formattime_audio":            "short",
+    
+    "config.localmountpath":            [],
                   
     "color.black":              BLACK,
     "color.white":              WHITE,

@@ -79,3 +79,23 @@ class DrawToDisplay_Default:
         self.screen.blit(self._drawSetting['startscreen.logo'],(x,y-10))
 
         self.displaytext(time_now.strftime("%H:%M:%S"), self._drawSetting['startscreen.clock.fontsize'], (self.screen.get_width()/2), (self.screen.get_height()/2)+self._drawSetting['startscreen.clock.height_margin'], 'none', (self._ConfigDefault['color.white']))
+
+        if len(self._ConfigDefault['config.localmountpath'])>0:
+            index = 1
+            font_size = 32
+            if self._ConfigDefault['display.resolution']=="320x240":
+                font_size = 28
+            margintop_begin = (self.screen.get_height()/2)-(font_size+(font_size*len(self._ConfigDefault['config.localmountpath']))/2)
+            self.displaytext('Disk:', font_size, self.screen.get_width()-10, margintop_begin+font_size, 'right', self._ConfigDefault['color.white'])
+            
+            for path in self._ConfigDefault['config.localmountpath']: 
+                disk_total, disk_used, disk_free, disk_free_percent = self.helper.diskUsage(path)        
+           
+                color = self._ConfigDefault['color.green']
+                if 90 <= disk_free_percent <= 100:
+                    color = self._ConfigDefault['color.red']
+                
+                self.displaytext(str(int(disk_free_percent)) + '%', font_size, self.screen.get_width()-10, margintop_begin+font_size+(index*font_size), 'right', color)
+                
+                index = index + 1
+        

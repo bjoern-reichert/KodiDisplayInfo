@@ -1,4 +1,5 @@
 import sys
+import os
 
 class Helper(object):
 
@@ -106,3 +107,11 @@ class Helper(object):
 			wrapped.append(stext.strip())				  
 			text=text[nl:]								 
 		return wrapped
+	
+	def diskUsage(self, path):
+		st = os.statvfs(path)
+		free = st.f_bavail * st.f_frsize
+		total = st.f_blocks * st.f_frsize
+		used = (st.f_blocks - st.f_bfree) * st.f_frsize
+		percent = round(100 - ( 1. * free/total ) * 100, 2)
+		return total, used, free, percent

@@ -53,6 +53,26 @@ class HelperConfig:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.yellow'])
                 self.helper.printout("Config [CONFIG] FORMATTIME_AUDIO not set correctly - default is activ!")
                 
+        if self.configParser.has_option('CONFIG', 'LOCALMOUNTPATHS'):
+            temp = self.configParser.get('CONFIG', 'LOCALMOUNTPATHS')
+            list_paths = []
+            
+            if temp.find(',') > 0:
+                list_paths = temp.split(',')
+            else:
+                list_paths.extend([temp])
+            
+            pathschecked = []
+            for path in list_paths:
+                if os.path.isdir(path):
+                    pathschecked.append(path)
+    
+            if len(pathschecked)>0:
+                self._ConfigDefault['config.localmountpath'] = pathschecked
+            else:
+                self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+                self.helper.printout("Config [CONFIG] LOCALMOUNTPATHS empty!")
+                
         if self.configParser.has_option('DISPLAY', 'RESOLUTION'):
             temp = self.configParser.get('DISPLAY', 'RESOLUTION')
             if temp=="320x240" or temp=="480x272" or temp=="480x320":
