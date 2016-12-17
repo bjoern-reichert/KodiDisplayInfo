@@ -35,7 +35,7 @@ class KODI_WEBSERVER:
         except timeout:
             self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
             return json.loads('{"id":1,"jsonrpc":"2.0","result":[]}')
-        
+
     def KODI_GetActivePlayers(self):
         try:
             parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}')
@@ -132,3 +132,29 @@ class KODI_WEBSERVER:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             self.helper.printout('Decoding JSON has failed')
             return 0,[0,0,0],[0,0,0]
+        
+    def KODI_GetTotalCount(self, what = "video"):
+        try:
+            if what=="video":
+                parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "VideoLibrary.GetMovies", "params": {"limits": { "start" : 0, "end": 1 }}, "id": "libMovies"}')
+            elif what=="songs":
+                parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "AudioLibrary.GetSongs", "params": {"limits": { "start" : 0, "end": 1 }}, "id": "libSongs"}')
+            elif what=="album":
+                parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "AudioLibrary.GetAlbums", "params": {"limits": { "start" : 0, "end": 1 }}, "id": "libAlbums"}')
+            try:
+                return parsed_json['result']['limits']['total']
+            except KeyError as e:
+                self.helper.printout("KeyError: " + str(e))
+                return 0
+            except IndexError as e:
+                self.helper.printout("IndexError: " + str(e))
+                return 0
+            except TypeError as e:
+                #self.helper.printout("IndexError: " + str(e))
+                return 0
+        except ValueError:
+            self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+            self.helper.printout('Decoding JSON has failed')
+            return 0   
+            
+        

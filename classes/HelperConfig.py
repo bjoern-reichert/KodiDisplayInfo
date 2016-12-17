@@ -1,4 +1,5 @@
 import os
+import json
 try:
     import ConfigParser as configparser # Python2
 except ImportError:
@@ -54,21 +55,17 @@ class HelperConfig:
                 self.helper.printout("Config [CONFIG] FORMATTIME_AUDIO not set correctly - default is activ!")
                 
         if self.configParser.has_option('CONFIG', 'LOCALMOUNTPATHS'):
-            temp = self.configParser.get('CONFIG', 'LOCALMOUNTPATHS')
-            list_paths = []
-            
-            if temp.find(',') > 0:
-                list_paths = temp.split(',')
-            else:
-                list_paths.extend([temp])
-            
-            pathschecked = []
-            for path in list_paths:
-                if os.path.isdir(path):
-                    pathschecked.append(path)
-    
-            if len(pathschecked)>0:
-                self._ConfigDefault['config.localmountpath'] = pathschecked
+            jsonString = self.configParser.get('CONFIG', 'LOCALMOUNTPATHS')
+            jsonObject = json.loads(jsonString)
+            for name in jsonObject:
+                path = jsonObject[name]
+                if not os.path.isdir(path):
+                    self.helper.printout("[error]    ", self._ConfigDefault['mesg.red'])
+                    self.helper.printout("Path:" + path)
+                    del jsonObject[name]
+
+            if len(jsonObject)>0:
+                self._ConfigDefault['config.localmountpath'] = jsonObject
             else:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
                 self.helper.printout("Config [CONFIG] LOCALMOUNTPATHS empty!")

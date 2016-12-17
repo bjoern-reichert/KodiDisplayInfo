@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v4.0
+# KodiDisplayInfo v6.0
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -21,8 +21,10 @@
 # v4.2    Add TIMEFORMAT 06:21 short
 # v4.3    Config optimization, UnicodeEncodeError Fix
 # v5.0    Python 2 and Python 3 compatible
+# v6.0    Startscreen HDD und KODI total infos
 
 import os
+import json
 import sys
 import datetime
 import pygame
@@ -158,7 +160,8 @@ def main():
                 # API has nothing
                 running_libery_id = -1
                 media_title = ""
-                draw_default.drawLogoStartScreen(time_now)
+                media_total = json.loads('{"Movies":"'+str(KODI_WEBSERVER.KODI_GetTotalCount('video'))+'"}') # ,"Music":"'+str(KODI_WEBSERVER.KODI_GetTotalCount('songs'))+'"
+                draw_default.drawLogoStartScreen(time_now, media_total)
     
             pygame.display.flip()
         
