@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 class DrawToDisplay_Default:
 
     # default for 320x240
@@ -121,7 +119,7 @@ class DrawToDisplay_Default:
                     
                 self.displaytext(name, font_size_small, self.screen.get_width()-10, margintop_begin+(font_size_small*index)+(index*font_size), 'right', self._ConfigDefault['color.white'])
                     
-                disk_total, disk_used, disk_free, disk_free_percent = self.helper.diskUsage(path)        
+                disk_free_percent = self.helper.diskUsage(path, "percent")        
             
                 color = self._ConfigDefault['color.green']
                 if 90 <= disk_free_percent <= 100:

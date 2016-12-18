@@ -108,10 +108,14 @@ class Helper(object):
 			text=text[nl:]								 
 		return wrapped
 	
-	def diskUsage(self, path):
+	def diskUsage(self, path, what = ""):
 		st = os.statvfs(path)
 		free = st.f_bavail * st.f_frsize
 		total = st.f_blocks * st.f_frsize
 		used = (st.f_blocks - st.f_bfree) * st.f_frsize
 		percent = round(100 - ( 1. * free/total ) * 100, 2)
-		return total, used, free, percent
+		
+		if what == "":
+			return total, used, free, percent
+		elif what == "percent":
+			return percent
