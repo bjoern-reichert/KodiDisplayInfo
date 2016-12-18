@@ -57,12 +57,12 @@ class HelperConfig:
         if self.configParser.has_option('CONFIG', 'LOCALMOUNTPATHS'):
             jsonString = self.configParser.get('CONFIG', 'LOCALMOUNTPATHS')
             jsonObject = json.loads(jsonString)
-            for name in jsonObject:
+            for name in jsonObject.copy():
                 path = jsonObject[name]
                 if not os.path.isdir(path):
+                    del jsonObject[name]
                     self.helper.printout("[error]    ", self._ConfigDefault['mesg.red'])
                     self.helper.printout("Path:" + path)
-                    del jsonObject[name]
 
             if len(jsonObject)>0:
                 self._ConfigDefault['config.localmountpath'] = jsonObject

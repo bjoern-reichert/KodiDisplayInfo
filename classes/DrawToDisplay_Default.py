@@ -83,15 +83,16 @@ class DrawToDisplay_Default:
         # total
         if len(media_total)>0:
             index = 1
-            font_size = 28
-            font_size_small = 24
+            font_size = 36
+            font_size_small = 30
             if self._ConfigDefault['display.resolution']=="320x240":
-                font_size = 26
+                font_size = 28
+                font_size_small = 24
             margintop_begin = (self.screen.get_height()/2)-((font_size_small*len(media_total))+(font_size*len(media_total))/2)
             self.displaytext('Total:', font_size, 10, margintop_begin+font_size, 'left', self._ConfigDefault['color.grey'])
                 
             jsonObject = media_total
-            for name in jsonObject:
+            for name in jsonObject.copy():
                 total = jsonObject[name]
 
                 self.displaytext(name, font_size_small, 10, margintop_begin+(font_size_small*index)+(index*font_size), 'left', self._ConfigDefault['color.white'])
@@ -106,15 +107,16 @@ class DrawToDisplay_Default:
         # disk
         if len(self._ConfigDefault['config.localmountpath'])>0:
             index = 1
-            font_size = 28
-            font_size_small = 24
+            font_size = 36
+            font_size_small = 30
             if self._ConfigDefault['display.resolution']=="320x240":
-                font_size = 26
+                font_size = 28
+                font_size_small = 24
             margintop_begin = (self.screen.get_height()/2)-((font_size_small*len(self._ConfigDefault['config.localmountpath']))+(font_size*len(self._ConfigDefault['config.localmountpath']))/2)
             self.displaytext('Disk:', font_size, self.screen.get_width()-10, margintop_begin+font_size, 'right', self._ConfigDefault['color.grey'])
 
             jsonObject = self._ConfigDefault['config.localmountpath']
-            for name in jsonObject:
+            for name in jsonObject.copy():
                 path = jsonObject[name]
                     
                 self.displaytext(name, font_size_small, self.screen.get_width()-10, margintop_begin+(font_size_small*index)+(index*font_size), 'right', self._ConfigDefault['color.white'])
