@@ -4,7 +4,7 @@ class DrawToDisplay_Default:
     _drawSetting = {}
     _drawSetting['startscreen.logo'] = ""
     _drawSetting['startscreen.clock.fontsize'] = 60
-    _drawSetting['startscreen.clock.height_margin'] = 88
+    _drawSetting['startscreen.clock.height_margin'] = 90
     
     default_info_text = ""
     default_info_color = ""
@@ -49,7 +49,7 @@ class DrawToDisplay_Default:
         self.default_info_color = color
     
     def infoTextKODI(self, text, color):
-        self.displaytext(text, 32, (self.screen.get_width()/2), 20, 'none', color)
+        self.displaytext(text, 34, (self.screen.get_width()/2), 20, 'none', color)
     
     def displaytext(self, text, size, x, y, floating, color):
         font = self.pygame.font.Font(self._ConfigDefault['basedirpath']+"fonts/MC360.ttf", size)
@@ -78,46 +78,44 @@ class DrawToDisplay_Default:
 
         self.displaytext(time_now.strftime("%H:%M:%S"), self._drawSetting['startscreen.clock.fontsize'], (self.screen.get_width()/2), (self.screen.get_height()/2)+self._drawSetting['startscreen.clock.height_margin'], 'none', (self._ConfigDefault['color.white']))
 
+        font_size = 48
+        font_size_small = 32
+        if self._ConfigDefault['display.resolution']=="320x240":
+            font_size = 34
+            font_size_small = 26
+
         # total
         if len(media_total)>0:
-            index = 1
-            font_size = 36
-            font_size_small = 30
-            if self._ConfigDefault['display.resolution']=="320x240":
-                font_size = 28
-                font_size_small = 24
-            margintop_begin = (self.screen.get_height()/2)-((font_size_small*len(media_total))+(font_size*len(media_total))/2)
-            self.displaytext('Total:', font_size, 10, margintop_begin+font_size, 'left', self._ConfigDefault['color.grey'])
-                
+            index = 0
+            
+            margintop_begin = (self.screen.get_height()/2)-((font_size_small+(font_size_small*len(media_total))+(font_size*len(media_total)))/2)
+            self.displaytext('Total:', font_size_small, 10, margintop_begin+font_size_small, 'left', self._ConfigDefault['color.grey'])
+
             jsonObject = media_total
             for name in jsonObject.copy():
                 total = jsonObject[name]
 
-                self.displaytext(name, font_size_small, 10, margintop_begin+(font_size_small*index)+(index*font_size), 'left', self._ConfigDefault['color.white'])
+                self.displaytext(name, font_size_small, 10, margintop_begin+font_size_small+font_size_small+(font_size_small*index)+(index*font_size), 'left', self._ConfigDefault['color.white'])
     
                 color = self._ConfigDefault['color.green']
                 if 0 <= int(total) <= 10:
                     color = self._ConfigDefault['color.red']
                     
-                self.displaytext(total, font_size, 10, margintop_begin+font_size+(font_size_small*index)+(index*font_size), 'left', color)
+                self.displaytext(total, font_size, 10, margintop_begin+font_size_small+font_size_small+font_size+(font_size_small*index)+(index*font_size), 'left', color)
                 index = index + 1
 
         # disk
         if len(self._ConfigDefault['config.localmountpath'])>0:
-            index = 1
-            font_size = 36
-            font_size_small = 30
-            if self._ConfigDefault['display.resolution']=="320x240":
-                font_size = 28
-                font_size_small = 24
-            margintop_begin = (self.screen.get_height()/2)-((font_size_small*len(self._ConfigDefault['config.localmountpath']))+(font_size*len(self._ConfigDefault['config.localmountpath']))/2)
-            self.displaytext('Disk:', font_size, self.screen.get_width()-10, margintop_begin+font_size, 'right', self._ConfigDefault['color.grey'])
+            index = 0
+  
+            margintop_begin = (self.screen.get_height()/2)-((font_size_small+(font_size_small*len(self._ConfigDefault['config.localmountpath']))+(font_size*len(self._ConfigDefault['config.localmountpath'])))/2)
+            self.displaytext('Disk:', font_size_small, self.screen.get_width()-10, margintop_begin+font_size_small, 'right', self._ConfigDefault['color.grey'])
 
             jsonObject = self._ConfigDefault['config.localmountpath']
             for name in jsonObject.copy():
                 path = jsonObject[name]
                     
-                self.displaytext(name, font_size_small, self.screen.get_width()-10, margintop_begin+(font_size_small*index)+(index*font_size), 'right', self._ConfigDefault['color.white'])
+                self.displaytext(name, font_size_small, self.screen.get_width()-10, margintop_begin+font_size_small+font_size_small+(font_size_small*index)+(index*font_size), 'right', self._ConfigDefault['color.white'])
                     
                 disk_free_percent = self.helper.diskUsage(path, "percent")        
             
@@ -125,6 +123,6 @@ class DrawToDisplay_Default:
                 if 90 <= disk_free_percent <= 100:
                     color = self._ConfigDefault['color.red']
                     
-                self.displaytext(str(int(disk_free_percent)) + '%', font_size, self.screen.get_width()-10, margintop_begin+font_size+(font_size_small*index)+(index*font_size), 'right', color)
-                index = index + 1      
+                self.displaytext(str(int(disk_free_percent)) + '%', font_size, self.screen.get_width()-10, margintop_begin+font_size_small+font_size_small+font_size+(font_size_small*index)+(index*font_size), 'right', color)
+                index = index + 1     
         
