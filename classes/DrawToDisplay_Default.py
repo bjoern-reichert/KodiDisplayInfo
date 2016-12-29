@@ -78,7 +78,7 @@ class DrawToDisplay_Default:
 
         self.displaytext(time_now.strftime("%H:%M:%S"), self._drawSetting['startscreen.clock.fontsize'], (self.screen.get_width()/2), (self.screen.get_height()/2)+self._drawSetting['startscreen.clock.height_margin'], 'none', (self._ConfigDefault['color.white']))
 
-        font_size = 48
+        font_size = 52
         font_size_small = 32
         if self._ConfigDefault['display.resolution']=="320x240":
             font_size = 34
