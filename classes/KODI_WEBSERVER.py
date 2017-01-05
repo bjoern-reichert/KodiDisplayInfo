@@ -1,9 +1,11 @@
-import json
+import json, warnings
 from socket import timeout
 try:
     import urllib2 as urllibopen # Python2
+    warnings.filterwarnings("ignore", category=UserWarning, module='urllib2')
 except ImportError:
     import urllib.request as urllibopen # Python3
+    warnings.filterwarnings("ignore", category=UserWarning, module='urllib')
 
 class KODI_WEBSERVER:
     
@@ -15,9 +17,7 @@ class KODI_WEBSERVER:
         self.draw_default = draw_default
         
         self.ip_port = 'http://'
-        if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
-            self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.user']+':'+self._ConfigDefault['KODI.webserver.pass']+'@'
-        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/'
+        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/'                 
        
     def getJSON(self, jsondata, get_parameter = 'jsonrpc?request='):
         self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
@@ -26,6 +26,11 @@ class KODI_WEBSERVER:
             json_data = json.dumps(json.loads(jsondata))
             post_data = json_data.encode('utf-8')
             request = urllibopen.Request(self.ip_port + get_parameter, post_data, headers)
+            
+            if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
+                passman = urllibopen.HTTPPasswordMgrWithDefaultRealm()
+                passman.add_password(None, self.ip_port, self._ConfigDefault['KODI.webserver.user'], self._ConfigDefault['KODI.webserver.pass'])
+                urllibopen.install_opener(urllibopen.build_opener(urllibopen.HTTPBasicAuthHandler(passman)))
             
             result = urllibopen.urlopen(request,timeout=3).read()
             return json.loads(result.decode("utf-8"))
