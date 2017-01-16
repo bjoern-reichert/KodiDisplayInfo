@@ -22,6 +22,7 @@
 # v4.3    Config optimization, UnicodeEncodeError Fix
 # v5.0    Python 2 and Python 3 compatible
 # v6.0    Startscreen HDD und KODI total infos
+# v6.1    Fix: Kodi server change user and password structure
 
 import os
 import json
@@ -72,6 +73,7 @@ _ConfigDefault = {
     "config.formattime_audio":            "short",
     
     "config.localmountpath":            [],
+    "config.localmediatotal":            [],
                   
     "color.black":              BLACK,
     "color.white":              WHITE,
@@ -160,8 +162,14 @@ def main():
                 # API has nothing
                 running_libery_id = -1
                 media_title = ""
-                media_total = json.loads('{"Movies":"'+str(KODI_WEBSERVER.KODI_GetTotalCount('video'))+'"}') # ,"Music":"'+str(KODI_WEBSERVER.KODI_GetTotalCount('songs'))+'"
-                draw_default.drawLogoStartScreen(time_now, media_total)
+
+                media_total = {}
+                jsonObject = _ConfigDefault['config.localmediatotal']
+                for name in jsonObject.copy():
+                    media = jsonObject[name]
+                    media_total.update({name:str(KODI_WEBSERVER.KODI_GetTotalCount(media))})
+
+                draw_default.drawLogoStartScreen(time_now, json.loads(json.dumps(media_total)))
     
             pygame.display.flip()
         

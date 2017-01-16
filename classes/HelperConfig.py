@@ -55,14 +55,13 @@ class HelperConfig:
                 self.helper.printout("Config [CONFIG] FORMATTIME_AUDIO not set correctly - default is activ!")
                 
         if self.configParser.has_option('CONFIG', 'LOCALMOUNTPATHS'):
-            jsonString = self.configParser.get('CONFIG', 'LOCALMOUNTPATHS')
-            jsonObject = json.loads(jsonString)
+            jsonObject = json.loads(self.configParser.get('CONFIG', 'LOCALMOUNTPATHS'))
             for name in jsonObject.copy():
                 path = jsonObject[name]
                 if not os.path.isdir(path):
                     del jsonObject[name]
                     self.helper.printout("[error]    ", self._ConfigDefault['mesg.red'])
-                    self.helper.printout("Path:" + path)
+                    self.helper.printout("Path: " + path)
 
             if len(jsonObject)>0:
                 self._ConfigDefault['config.localmountpath'] = jsonObject
@@ -70,6 +69,23 @@ class HelperConfig:
                 self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
                 self.helper.printout("Config [CONFIG] LOCALMOUNTPATHS empty!")
                 
+        if self.configParser.has_option('CONFIG', 'LOCALMEDIATOTAL'):
+            jsonObject = json.loads(self.configParser.get('CONFIG', 'LOCALMEDIATOTAL'))
+            for name in jsonObject.copy():
+                media = jsonObject[name]
+                if media=="video" or media=="songs" or media=="album":
+                    media="";
+                else:
+                    del jsonObject[name]
+                    self.helper.printout("[error]    ", self._ConfigDefault['mesg.red'])
+                    self.helper.printout("Media: " + media)
+
+            if len(jsonObject)>0:
+                self._ConfigDefault['config.localmediatotal'] = jsonObject
+            else:
+                self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
+                self.helper.printout("Config [CONFIG] LOCALMEDIATOTAL empty!")
+
         if self.configParser.has_option('DISPLAY', 'RESOLUTION'):
             temp = self.configParser.get('DISPLAY', 'RESOLUTION')
             if temp=="320x240" or temp=="480x272" or temp=="480x320":

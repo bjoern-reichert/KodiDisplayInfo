@@ -16,8 +16,12 @@ class KODI_WEBSERVER:
         self._ConfigDefault = _ConfigDefault
         self.draw_default = draw_default
         
-        self.ip_port = 'http://'
-        self.ip_port = self.ip_port+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/'                 
+        self.ip_port = 'http://'+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/'
+
+        if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
+            passman = urllibopen.HTTPPasswordMgrWithDefaultRealm()
+            passman.add_password(None, self.ip_port, self._ConfigDefault['KODI.webserver.user'], self._ConfigDefault['KODI.webserver.pass'])
+            urllibopen.install_opener(urllibopen.build_opener(urllibopen.HTTPBasicAuthHandler(passman)))
        
     def getJSON(self, jsondata, get_parameter = 'jsonrpc?request='):
         self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
@@ -26,11 +30,6 @@ class KODI_WEBSERVER:
             json_data = json.dumps(json.loads(jsondata))
             post_data = json_data.encode('utf-8')
             request = urllibopen.Request(self.ip_port + get_parameter, post_data, headers)
-            
-            if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
-                passman = urllibopen.HTTPPasswordMgrWithDefaultRealm()
-                passman.add_password(None, self.ip_port, self._ConfigDefault['KODI.webserver.user'], self._ConfigDefault['KODI.webserver.pass'])
-                urllibopen.install_opener(urllibopen.build_opener(urllibopen.HTTPBasicAuthHandler(passman)))
             
             result = urllibopen.urlopen(request,timeout=3).read()
             return json.loads(result.decode("utf-8"))
@@ -137,7 +136,7 @@ class KODI_WEBSERVER:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             self.helper.printout('Decoding JSON has failed')
             return 0,[0,0,0],[0,0,0]
-        
+
     def KODI_GetTotalCount(self, what = "video"):
         try:
             if what=="video":
