@@ -146,7 +146,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode(getattr(draw_default, 'Screen'+_ConfigDefault['display.resolution'])(), 0, 32)
     pygame.display.set_caption('KodiDisplayInfo')
-    pygame.mouse.set_visible(1)
+    pygame.mouse.set_visible(0)
     clock = pygame.time.Clock()
     
     RELOAD_SPEED = 750
