@@ -129,8 +129,9 @@ if configParser.has_option('COLOR', 'ORANGE'):
     _ConfigDefault['color.orange'] = helper.HTMLColorToRGB(configParser.get('COLOR', 'ORANGE'))
 
 #Display FB
-if configParser.get('DISPLAY', 'FBDEV')!="":
-    os.environ["SDL_FBDEV"] = configParser.get('DISPLAY', 'FBDEV')
+if configParser.has_option('DISPLAY', 'FBDEV'):
+    if configParser.get('DISPLAY', 'FBDEV')!="":
+        os.environ["SDL_FBDEV"] = configParser.get('DISPLAY', 'FBDEV')
 
 def main_exit():
     pygame.quit()
