@@ -87,7 +87,7 @@ helper = Helper(_ConfigDefault)
 
 # init config && check config
 helperconfig = HelperConfig(helper, _ConfigDefault, basedirpath)
-_ConfigDefault = helperconfig.parseConfig();
+_ConfigDefault = helperconfig.parseConfig()
 
 def main_exit():
     pygame.quit()

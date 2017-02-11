@@ -13,13 +13,15 @@ class HelperConfig:
         
         self.helper.printout("[info]    ", _ConfigDefault['mesg.green'])
         self.helper.printout("Parse Config")
-        self.configParser = configparser.RawConfigParser()   
+        self.configParser = configparser.RawConfigParser()
         configFilePath = r''+basedirpath+'config.txt'
         self.configParser.read(configFilePath)
-        
+
         #Display FB
-        if self.configParser.get('DISPLAY', 'FBDEV')!="":
-            os.environ["SDL_FBDEV"] = self.configParser.get('DISPLAY', 'FBDEV')
+        if self.configParser.has_option('DISPLAY', 'FBDEV'):
+            if self.configParser.get('DISPLAY', 'FBDEV')!="":
+                os.environ["SDL_FBDEV"] = self.configParser.get('DISPLAY', 'FBDEV')
+
     
     def parseConfig(self):
         if self.configParser.has_option('CONFIG', 'SCREENMODUS_VIDEO'):
@@ -74,7 +76,7 @@ class HelperConfig:
             for name in jsonObject.copy():
                 media = jsonObject[name]
                 if media=="video" or media=="songs" or media=="album":
-                    media="";
+                    media=""
                 else:
                     del jsonObject[name]
                     self.helper.printout("[error]    ", self._ConfigDefault['mesg.red'])
