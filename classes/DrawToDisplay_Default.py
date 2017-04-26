@@ -78,17 +78,17 @@ class DrawToDisplay_Default:
 
         self.displaytext(time_now.strftime("%H:%M:%S"), self._drawSetting['startscreen.clock.fontsize'], (self.screen.get_width()/2), (self.screen.get_height()/2)+self._drawSetting['startscreen.clock.height_margin'], 'none', (self._ConfigDefault['color.white']))
 
-        font_size = 52
-        font_size_small = 32
+        font_size = 62
+        font_size_small = 30
         if self._ConfigDefault['display.resolution']=="320x240":
-            font_size = 34
-            font_size_small = 26
+            font_size = 38
+            font_size_small = 24
 
         # total
         if len(media_total)>0:
             index = 0
             
-            margintop_begin = (self.screen.get_height()/2)-((font_size_small+(font_size_small*len(media_total))+(font_size*len(media_total)))/2)
+            margintop_begin = (self.screen.get_height()/2)-((font_size_small+(font_size_small*len(media_total))+(font_size*len(media_total)))/2)-6
             self.displaytext('Total:', font_size_small, 10, margintop_begin+font_size_small, 'left', self._ConfigDefault['color.grey'])
 
             jsonObject = media_total
@@ -108,7 +108,7 @@ class DrawToDisplay_Default:
         if len(self._ConfigDefault['config.localmountpath'])>0:
             index = 0
   
-            margintop_begin = (self.screen.get_height()/2)-((font_size_small+(font_size_small*len(self._ConfigDefault['config.localmountpath']))+(font_size*len(self._ConfigDefault['config.localmountpath'])))/2)
+            margintop_begin = (self.screen.get_height()/2)-((font_size_small+(font_size_small*len(self._ConfigDefault['config.localmountpath']))+(font_size*len(self._ConfigDefault['config.localmountpath'])))/2)-6
             self.displaytext('Disk:', font_size_small, self.screen.get_width()-10, margintop_begin+font_size_small, 'right', self._ConfigDefault['color.grey'])
 
             jsonObject = self._ConfigDefault['config.localmountpath']
