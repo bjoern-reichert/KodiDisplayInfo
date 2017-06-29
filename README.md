@@ -10,12 +10,8 @@ Supported screen resolutions
 
 like Watterott RPi Display B/B+ 2.8", Adafruit PiTFT (Plus) 3.5" 480x320, TinyLCD 3.5" and so on ...
 
-###Support the project
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=BUV6SF9ZYZEHJ)
-[![paypal](https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5XSJRGGGQD76U)
+### Installation guidelines
 
-###Installation guidelines
 [EN-Version http://www.opendisplaycase.com/kodidisplayinfo.html](http://www.opendisplaycase.com/kodidisplayinfo.html)
 
 [DE-Version http://www.opendisplaycase.de/kodidisplayinfo.html](http://www.opendisplaycase.de/kodidisplayinfo.html)
-
