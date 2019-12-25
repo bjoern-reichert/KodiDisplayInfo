@@ -2,8 +2,10 @@ from PIL import Image
 import io
 try:
     import urllib2 as urllibopen # Python2
+    from urllib import unquote
 except ImportError:
     import urllib.request as urllibopen # Python3
+    from urllib.parse import unquote
     
 class HelperImage():
     
@@ -15,8 +17,12 @@ class HelperImage():
 
         if url!="":
             try:
+                test_http_array = url.split('http')
+                if len(test_http_array)>1:
+                    url = 'http'+unquote(test_http_array[2])
+                
                 #load
-                if url.startswith('http://'):
+                if url.startswith('http'):
                     im = io.BytesIO(urllibopen.urlopen(url).read())
                 else:
                     im = url

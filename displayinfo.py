@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v6.1
+# KodiDisplayInfo v6.2
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -23,6 +23,7 @@
 # v5.0    Python 2 and Python 3 compatible
 # v6.0    Startscreen HDD und KODI total infos
 # v6.1    Fix: Kodi server change user and password structure
+# v6.2    Fix: Fix HelperImage URL from Kodi-API if thumbnail is from image.tmdb.org
 
 import os
 import json

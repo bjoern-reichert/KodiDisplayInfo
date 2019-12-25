@@ -72,7 +72,7 @@ class KODI_WEBSERVER:
                     thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
                 else:
                     thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
-                    
+ 
                 return mid, title, thumbnail
             except KeyError:
                 return -1, "", ""
@@ -103,7 +103,7 @@ class KODI_WEBSERVER:
                     thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
                 else:
                     thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
-                    
+ 
                 album = parsed_json['result']['item']['album']
                 artist = ', '.join(parsed_json['result']['item']['artist'])
 
