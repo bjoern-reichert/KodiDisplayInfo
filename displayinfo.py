@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v6.0
+# KodiDisplayInfo v6.1
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -11,7 +11,7 @@
 # v3.0    Kodi 14 Release - Refactor Version
 #         Published GitHub 03.10.2015
 # v3.2    Optimization movie title -> TITLEFORMAT -> oneline (default), twoline [smaller font size and optimized for two lines]
-#         
+#
 # v3.3    Change the "time" and "totaltime" structure, screen draw optimization, new option -> TIMEFORMAT -> shows 6 minutes or 00:06:21 long
 #         -> ideas from Andrea Prunic <aprunic[at]gmail.com>
 # v3.4    Use the video structure for audio, update class KODI_WEBSERVER
@@ -49,39 +49,39 @@ GREEN = (0,255,0)
 GREY = (153,153,153)
 
 _ConfigDefault = {
-    "basedirpath":              basedirpath,
-    
-    "mesg.grey":                30,
-    "mesg.red":                 31,
-    "mesg.green":               32,    
-    "mesg.yellow":              33,
-    "mesg.blue":                34,
-    "mesg.magenta":             35,
-    "mesg.cyan":                36,   
-    "mesg.white":               37,
+    "basedirpath":                  basedirpath,
 
-    "KODI.webserver.host":            "localhost",
-    "KODI.webserver.port":            "8080",
-    "KODI.webserver.user":            "",
-    "KODI.webserver.pass":            "",
-    
-    "display.resolution":       "320x240",   
-    
-    "config.screenmodus_video":           "time",
-    "config.formattime_video":            "minutes",
-    "config.screenmodus_audio":           "thumbnail",
-    "config.formattime_audio":            "short",
-    
-    "config.localmountpath":            [],
-    "config.localmediatotal":            [],
-                  
-    "color.black":              BLACK,
-    "color.white":              WHITE,
-    "color.red":                RED,
-    "color.orange":             ORANGE,
-    "color.green":              GREEN,
-    "color.grey":               GREY
-    }
+    "mesg.grey":                    30,
+    "mesg.red":                     31,
+    "mesg.green":                   32,
+    "mesg.yellow":                  33,
+    "mesg.blue":                    34,
+    "mesg.magenta":                 35,
+    "mesg.cyan":                    36,
+    "mesg.white":                   37,
+
+    "KODI.webserver.host":          "localhost",
+    "KODI.webserver.port":          "8080",
+    "KODI.webserver.user":          "",
+    "KODI.webserver.pass":          "",
+
+    "display.resolution":           "320x240",
+
+    "config.screenmodus_video":     "time",
+    "config.formattime_video":      "minutes",
+    "config.screenmodus_audio":     "thumbnail",
+    "config.formattime_audio":      "short",
+
+    "config.localmountpath":        [],
+    "config.localmediatotal":       [],
+
+    "color.black":                  BLACK,
+    "color.white":                  WHITE,
+    "color.red":                    RED,
+    "color.orange":                 ORANGE,
+    "color.green":                  GREEN,
+    "color.grey":                   GREY
+}
 
 helper = Helper(_ConfigDefault)
 
@@ -125,7 +125,7 @@ def main():
     running_libery_id = -1
     running = True
     # run the game loop
-    try:        
+    try:
         while running:
             clock.tick(4) # 4 x in one seconds
             for event in pygame.event.get():
@@ -138,7 +138,7 @@ def main():
             
             playerid, playertype = KODI_WEBSERVER.KODI_GetActivePlayers()
             if int(playerid) >= 0:
-                if playertype=="video":    
+                if playertype=="video":
                     media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItemVideo(playerid)
                     speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
                     if _ConfigDefault['config.screenmodus_video']=="time":
