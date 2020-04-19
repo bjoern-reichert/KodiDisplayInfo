@@ -18,8 +18,11 @@ class HelperImage():
         if url!="":
             try:
                 test_http_array = url.split('http')
-                if len(test_http_array)>1:
-                    url = 'http'+unquote(test_http_array[2])
+                try:
+                    if len(test_http_array)>1:
+                        url = 'http'+unquote(test_http_array[2])
+                except IndexError:
+                    print("URL IMG Error HelperImage()")
                 
                 #load
                 if url.startswith('http'):
