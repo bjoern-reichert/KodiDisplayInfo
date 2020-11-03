@@ -24,6 +24,7 @@
 # v6.0    Startscreen HDD und KODI total infos
 # v6.1    Fix: Kodi server change user and password structure
 # v6.2    Fix: Fix HelperImage URL from Kodi-API if thumbnail is from image.tmdb.org
+#         Published GitHub 03.11.2020
 
 import os
 import json
