@@ -12,6 +12,6 @@ like Watterott RPi Display B/B+ 2.8", Adafruit PiTFT (Plus) 3.5" 480x320, TinyLC
 
 ### Installation guidelines
 
-[EN-Version http://www.opendisplaycase.com/kodidisplayinfo.html](http://www.opendisplaycase.com/kodidisplayinfo.html)
+[EN-Version https://www.opendisplaycase.com/kodidisplayinfo-program.html](https://www.opendisplaycase.com/kodidisplayinfo-program.html)
 
-[DE-Version http://www.opendisplaycase.de/kodidisplayinfo.html](http://www.opendisplaycase.de/kodidisplayinfo.html)
+[DE-Version https://www.opendisplaycase.de/kodidisplayinfo.html](https://www.opendisplaycase.de/kodidisplayinfo.html)

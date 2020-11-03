@@ -1,10 +1,19 @@
 [CONFIG]
 #Screen Modus: time (default), thumbnail
-SCREENMODUS = time
-#Title format: oneline (default), twoline 
-TITLEFORMAT = oneline
+SCREENMODUS_VIDEO = time
 #Time format: minutes (default), short (mm:ss), long (hh:mm:ss)
-TIMEFORMAT = minutes
+FORMATTIME_VIDEO = minutes 
+
+#Screen Modus: thumbnail (default)
+SCREENMODUS_AUDIO = thumbnail
+#Time format: short (mm:ss) (default), long (hh:mm:ss)
+FORMATTIME_AUDIO = short
+
+#Disk size JSON-Format: {"HDD1":"/mnt/HDFilms"}
+LOCALMOUNTPATHS = 
+
+#Count Media (video,songs,album) JSON-Format: {"Movies":"video"}
+LOCALMEDIATOTAL = 
 
 [DISPLAY]
 # Possible resolutions: 320x240 (default) or 480x272 or 480x320
