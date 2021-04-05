@@ -10,10 +10,10 @@ SCREENMODUS_AUDIO = thumbnail
 FORMATTIME_AUDIO = short
 
 #Disk size JSON-Format: {"HDD1":"/mnt/HDFilms"}
-LOCALMOUNTPATHS = 
+LOCALMOUNTPATHS = {} 
 
 #Count Media (video,songs,album) JSON-Format: {"Movies":"video"}
-LOCALMEDIATOTAL = 
+LOCALMEDIATOTAL = {}
 
 [DISPLAY]
 # Possible resolutions: 320x240 (default) or 480x272 or 480x320
