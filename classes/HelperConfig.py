@@ -1,5 +1,6 @@
 import os
 import json
+import copy
 try:
     import ConfigParser as configparser # Python2
 except ImportError:
@@ -58,7 +59,7 @@ class HelperConfig:
                 
         if self.configParser.has_option('CONFIG', 'LOCALMOUNTPATHS'):
             jsonObject = json.loads(self.configParser.get('CONFIG', 'LOCALMOUNTPATHS'))
-            for name in jsonObject.copy():
+            for name in copy.copy(jsonObject):
                 path = jsonObject[name]
                 if not os.path.isdir(path):
                     del jsonObject[name]
@@ -73,7 +74,7 @@ class HelperConfig:
                 
         if self.configParser.has_option('CONFIG', 'LOCALMEDIATOTAL'):
             jsonObject = json.loads(self.configParser.get('CONFIG', 'LOCALMEDIATOTAL'))
-            for name in jsonObject.copy():
+            for name in copy.copy(jsonObject):
                 media = jsonObject[name]
                 if media=="video" or media=="songs" or media=="album":
                     media=""

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v6.2
+# KodiDisplayInfo v6.3
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -25,12 +25,14 @@
 # v6.1    Fix: Kodi server change user and password structure
 # v6.2    Fix: Fix HelperImage URL from Kodi-API if thumbnail is from image.tmdb.org
 #         Published GitHub 03.11.2020
+# v6.3    Fix: Error Python 2 with .copy(
 
 import os
 import json
 import sys
 import datetime
 import pygame
+import copy
 from pygame.locals import *
 from classes.HelperConfig import HelperConfig
 from classes.Helper import Helper
@@ -167,7 +169,7 @@ def main():
 
                 media_total = {}
                 jsonObject = _ConfigDefault['config.localmediatotal']
-                for name in jsonObject.copy():
+                for name in copy.copy(jsonObject):
                     media = jsonObject[name]
                     media_total.update({name:str(KODI_WEBSERVER.KODI_GetTotalCount(media))})
 

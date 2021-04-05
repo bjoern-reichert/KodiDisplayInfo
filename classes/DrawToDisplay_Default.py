@@ -1,3 +1,5 @@
+import copy
+
 class DrawToDisplay_Default:
 
     # default for 320x240
@@ -92,7 +94,7 @@ class DrawToDisplay_Default:
             self.displaytext('Total:', font_size_small, 10, margintop_begin+font_size_small, 'left', self._ConfigDefault['color.grey'])
 
             jsonObject = media_total
-            for name in jsonObject.copy():
+            for name in copy.copy(jsonObject):
                 total = jsonObject[name]
 
                 self.displaytext(name, font_size_small, 10, margintop_begin+font_size_small+font_size_small+(font_size_small*index)+(index*font_size), 'left', self._ConfigDefault['color.white'])
@@ -112,7 +114,7 @@ class DrawToDisplay_Default:
             self.displaytext('Disk:', font_size_small, self.screen.get_width()-10, margintop_begin+font_size_small, 'right', self._ConfigDefault['color.grey'])
 
             jsonObject = self._ConfigDefault['config.localmountpath']
-            for name in jsonObject.copy():
+            for name in copy.copy(jsonObject):
                 path = jsonObject[name]
                     
                 self.displaytext(name, font_size_small, self.screen.get_width()-10, margintop_begin+font_size_small+font_size_small+(font_size_small*index)+(index*font_size), 'right', self._ConfigDefault['color.white'])
