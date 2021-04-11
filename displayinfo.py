@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v6.3
+# KodiDisplayInfo v6.4
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -26,6 +26,7 @@
 # v6.2    Fix: Fix HelperImage URL from Kodi-API if thumbnail is from image.tmdb.org
 #         Published GitHub 03.11.2020
 # v6.3    Fix: Error Python 2 with .copy(
+# v6.4    Add music year
 
 import os
 import json

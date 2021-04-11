@@ -85,7 +85,7 @@ class KODI_WEBSERVER:
         
     def KODI_GetItemAudio(self, playerid):
         try:            
-            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "album", "artist", "track", "thumbnail"], "playerid": '+str(playerid)+' }, "id": "AudioGetItem"}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "album", "artist", "track", "year", "thumbnail"], "playerid": '+str(playerid)+' }, "id": "AudioGetItem"}')
             try:
                 try:          
                     mid = parsed_json['result']['item']['id']
@@ -106,6 +106,10 @@ class KODI_WEBSERVER:
  
                 album = parsed_json['result']['item']['album']
                 artist = ', '.join(parsed_json['result']['item']['artist'])
+                
+                year = parsed_json['result']['item']['year']
+                if year!="":
+                    album = album + " ("+str(year)+")"
 
                 return mid, str(track)+'. '+title, thumbnail, album, artist
             except KeyError:
