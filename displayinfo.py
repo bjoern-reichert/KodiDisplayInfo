@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# KodiDisplayInfo v6.4
+# KodiDisplayInfo v6.5
 # Autor: Bjoern Reichert <opendisplaycase[at]gmx.net>
 # License: GNU General Public License (GNU GPLv3)
 #
@@ -27,6 +27,7 @@
 #         Published GitHub 03.11.2020
 # v6.3    Fix: Error Python 2 with .copy(
 # v6.4    Add music year
+# v6.5    Fix: Player.GetItem poster
 
 import os
 import json

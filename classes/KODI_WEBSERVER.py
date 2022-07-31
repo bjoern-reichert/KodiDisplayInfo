@@ -30,7 +30,7 @@ class KODI_WEBSERVER:
             json_data = json.dumps(json.loads(jsondata))
             post_data = json_data.encode('utf-8')
             request = urllibopen.Request(self.ip_port + get_parameter, post_data, headers)
-            
+
             result = urllibopen.urlopen(request,timeout=3).read()
             return json.loads(result.decode("utf-8"))
         except IOError:
@@ -56,7 +56,7 @@ class KODI_WEBSERVER:
         
     def KODI_GetItemVideo(self, playerid):
         try:           
-            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail","art"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
             try:
                 try:          
                     mid = parsed_json['result']['item']['id']
@@ -67,11 +67,14 @@ class KODI_WEBSERVER:
                 if title=="":
                     title = parsed_json['result']['item']['label']
                 
-                thumbnail = ""
-                if parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
-                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
-                else:
-                    thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
+                thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
+                try:
+                    if parsed_json['result']['item']['art']['poster']!="" and parsed_json['result']['item']['art']['poster'].find('.jpg') != -1:
+                        thumbnail = self.ip_port + parsed_json['result']['item']['art']['poster'].replace("image://", "image/")[:-1]
+                    elif parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
+                        thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
+                except KeyError:
+                    pass
  
                 return mid, title, thumbnail
             except KeyError:
