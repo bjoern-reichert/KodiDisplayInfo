@@ -1,5 +1,5 @@
 import json, warnings
-from socket import timeout
+import socket
 try:
     import urllib2 as urllibopen # Python2
     warnings.filterwarnings("ignore", category=UserWarning, module='urllib2')
@@ -10,19 +10,19 @@ except ImportError:
 class KODI_WEBSERVER:
     
     ip_port = ""
-    
+
     def __init__(self, helper, _ConfigDefault, draw_default):
         self.helper = helper
         self._ConfigDefault = _ConfigDefault
         self.draw_default = draw_default
-        
+
         self.ip_port = 'http://'+self._ConfigDefault['KODI.webserver.host']+':'+self._ConfigDefault['KODI.webserver.port']+'/'
 
         if self._ConfigDefault['KODI.webserver.user']!="" and self._ConfigDefault['KODI.webserver.pass']!="":
             passman = urllibopen.HTTPPasswordMgrWithDefaultRealm()
             passman.add_password(None, self.ip_port, self._ConfigDefault['KODI.webserver.user'], self._ConfigDefault['KODI.webserver.pass'])
             urllibopen.install_opener(urllibopen.build_opener(urllibopen.HTTPBasicAuthHandler(passman)))
-       
+
     def getJSON(self, jsondata, get_parameter = 'jsonrpc?request='):
         self.draw_default.setInfoText("", self._ConfigDefault['color.white'])
         try:
@@ -36,7 +36,7 @@ class KODI_WEBSERVER:
         except IOError:
             self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
             return json.loads('{"id":1,"jsonrpc":"2.0","result":[]}')
-        except timeout:
+        except socket.timeout:
             self.draw_default.setInfoText("NO KODI ACCESS!", self._ConfigDefault['color.red'])
             return json.loads('{"id":1,"jsonrpc":"2.0","result":[]}')
 
@@ -56,7 +56,7 @@ class KODI_WEBSERVER:
         
     def KODI_GetItemVideo(self, playerid):
         try:           
-            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail","art"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
+            parsed_json = self.getJSON('{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title","thumbnail","art","file"], "playerid": '+str(playerid)+' }, "id": "VideoGetItem"}')
             try:
                 try:          
                     mid = parsed_json['result']['item']['id']
@@ -75,8 +75,10 @@ class KODI_WEBSERVER:
                         thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
                 except KeyError:
                     pass
- 
-                return mid, title, thumbnail
+
+                file = parsed_json['result']['item']['file']
+
+                return mid, title, thumbnail, file
             except KeyError:
                 return -1, "", ""
             except IndexError:
@@ -166,6 +168,4 @@ class KODI_WEBSERVER:
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             self.helper.printout('Decoding JSON has failed')
-            return 0   
-            
-        
+            return 0

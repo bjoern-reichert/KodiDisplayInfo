@@ -1,20 +1,37 @@
 from PIL import Image
-import io
+import io, os
 try:
     import urllib2 as urllibopen # Python2
     from urllib import unquote
 except ImportError:
     import urllib.request as urllibopen # Python3
     from urllib.parse import unquote
-    
+try:
+    import httplib  # Python2
+except:
+    import http.client as httplib # Python3
+
 class HelperImage():
-    
+
+    def __init__(self, _ConfigDefault):
+        self._ConfigDefault = _ConfigDefault
+
     def setPygameScreen(self, pygame, screen):
         self.pygame = pygame
         self.screen = screen
-    
-    def scaleImage(self, url, max_width, max_heigth):
 
+    def isInternetReachable(self):
+        conn = httplib.HTTPSConnection("8.8.8.8", timeout=3)
+        try:
+            conn.request("HEAD", "/")
+            return True
+        except Exception:
+            return False
+        finally:
+            conn.close()
+
+    def scaleImage(self, url, file, max_width, max_heigth):
+        isInternetReachable = self.isInternetReachable()
         if url!="":
             try:
                 test_http_array = url.split('http')
@@ -23,13 +40,23 @@ class HelperImage():
                         url = 'http'+unquote(test_http_array[2])
                 except IndexError:
                     print("URL IMG Error HelperImage()")
-                
+
                 #load
+                im = ""
                 if url.startswith('http'):
-                    im = io.BytesIO(urllibopen.urlopen(url).read())
+                    if isInternetReachable == True:
+                        im = io.BytesIO(urllibopen.urlopen(url).read())
+                    elif file!="":
+                        filename, file_extension = os.path.splitext(file)
+                        im = file.replace(file_extension, "-poster.jpg")
+                        if not os.path.exists(im):
+                            im = ""
                 else:
                     im = url
-                
+
+                if im == "":
+                    im = self._ConfigDefault['basedirpath']+'img/kodi.png'
+
                 image_resize = Image.open(im)
         
                 #resize
@@ -57,4 +84,3 @@ class HelperImage():
             except IOError:
                 return ""
         return ""
-    

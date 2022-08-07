@@ -96,11 +96,11 @@ class DrawToDisplay_VideoThumbnail:
         self.pygame.draw.rect(self.screen, self._ConfigDefault['color.orange'], rect_done)
         self.pygame.draw.rect(self.screen, self._ConfigDefault['color.white'], rect_bar, 1)
         
-    def setThumbnail(self, url):
+    def setThumbnail(self, url, file):
         max_width = self._drawSetting['videoinfo.progressbar.margin_left']-20
         max_heigth = self.screen.get_height()-20
 
-        self.thumbnail = self.image.scaleImage(url, max_width, max_heigth)
+        self.thumbnail = self.image.scaleImage(url, file, max_width, max_heigth)
                 
     def drawProperties(self, video_title, time_now, speed, media_time, media_totaltime):        
         self.time = self.helper.format_to_seconds(media_time[0], media_time[1], media_time[2])
@@ -140,4 +140,3 @@ class DrawToDisplay_VideoThumbnail:
             
         if self.thumbnail!="": 
             self.screen.blit(self.thumbnail,(10,10))
-        

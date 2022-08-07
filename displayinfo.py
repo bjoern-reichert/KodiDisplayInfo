@@ -28,6 +28,7 @@
 # v6.3    Fix: Error Python 2 with .copy(
 # v6.4    Add music year
 # v6.5    Fix: Player.GetItem poster
+# v6.6    Fallback to local file poster if internet is not reachable
 
 import os
 import json
@@ -145,14 +146,14 @@ def main():
             playerid, playertype = KODI_WEBSERVER.KODI_GetActivePlayers()
             if int(playerid) >= 0:
                 if playertype=="video":
-                    media_id, media_title, media_thumbnail = KODI_WEBSERVER.KODI_GetItemVideo(playerid)
+                    media_id, media_title, media_thumbnail, media_file = KODI_WEBSERVER.KODI_GetItemVideo(playerid)
                     speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
                     if _ConfigDefault['config.screenmodus_video']=="time":
                         draw_videotime.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
                     elif _ConfigDefault['config.screenmodus_video']=="thumbnail":
                         if media_id!=running_libery_id:
                             running_libery_id=media_id
-                            draw_videothumbnail.setThumbnail(media_thumbnail)
+                            draw_videothumbnail.setThumbnail(media_thumbnail, media_file)
                         
                         draw_videothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
                 elif playertype == "audio":
@@ -188,7 +189,7 @@ def main():
         main_exit()
 
 if __name__ == "__main__":
-    image = HelperImage()
+    image = HelperImage(_ConfigDefault)
     draw_default = DrawToDisplay_Default(helper, _ConfigDefault)
     draw_videotime = DrawToDisplay_VideoTime(helper, _ConfigDefault)
     draw_videothumbnail = DrawToDisplay_VideoThumbnail(helper, image, _ConfigDefault)      
