@@ -157,12 +157,12 @@ def main():
                         
                         draw_videothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime)
                 elif playertype == "audio":
-                    media_id, media_title, media_thumbnail, media_album, media_artist = KODI_WEBSERVER.KODI_GetItemAudio(playerid)
+                    media_id, media_title, media_thumbnail, media_album, media_artist, media_file = KODI_WEBSERVER.KODI_GetItemAudio(playerid)
                     speed, media_time, media_totaltime = KODI_WEBSERVER.KODI_GetProperties(playerid)
                     if _ConfigDefault['config.screenmodus_audio']=="thumbnail":
                         if media_id!=running_libery_id:
                             running_libery_id=media_id
-                            draw_audiothumbnail.setThumbnail(media_thumbnail)
+                            draw_audiothumbnail.setThumbnail(media_thumbnail, media_file)
                         
                         draw_audiothumbnail.drawProperties(media_title, time_now, speed, media_time, media_totaltime, media_album, media_artist)
             else:

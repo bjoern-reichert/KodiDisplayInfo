@@ -34,23 +34,18 @@ class HelperImage():
         isInternetReachable = self.isInternetReachable()
         if url!="":
             try:
-                test_http_array = url.split('http')
-                try:
-                    if len(test_http_array)>1:
-                        url = 'http'+unquote(test_http_array[2])
-                except IndexError:
-                    print("URL IMG Error HelperImage()")
+                url = unquote(url)
+                file = unquote(file)
 
                 #load
                 im = ""
-                if url.startswith('http'):
-                    if isInternetReachable == True:
-                        im = io.BytesIO(urllibopen.urlopen(url).read())
-                    elif file!="":
-                        filename, file_extension = os.path.splitext(file)
-                        im = file.replace(file_extension, "-poster.jpg")
-                        if not os.path.exists(im):
-                            im = ""
+                if url.startswith('http') & isInternetReachable == True:
+                    im = io.BytesIO(urllibopen.urlopen(url).read())
+                elif file!="":
+                    filename, file_extension = os.path.splitext(file)
+                    im = file.replace(file_extension, "-poster.jpg")
+                    if not os.path.exists(im):
+                        im = ""
                 else:
                     im = url
 

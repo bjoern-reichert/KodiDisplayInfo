@@ -70,9 +70,9 @@ class KODI_WEBSERVER:
                 thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
                 try:
                     if parsed_json['result']['item']['art']['poster']!="" and parsed_json['result']['item']['art']['poster'].find('.jpg') != -1:
-                        thumbnail = self.ip_port + parsed_json['result']['item']['art']['poster'].replace("image://", "image/")[:-1]
+                        thumbnail = parsed_json['result']['item']['art']['poster'].replace("image://", "")[:-1]
                     elif parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
-                        thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
+                        thumbnail = parsed_json['result']['item']['thumbnail'].replace("image://", "")[:-1]
                 except KeyError:
                     pass
 
@@ -80,13 +80,13 @@ class KODI_WEBSERVER:
 
                 return mid, title, thumbnail, file
             except KeyError:
-                return -1, "", ""
+                return -1, "", "", ""
             except IndexError:
-                return -1, "", ""
+                return -1, "", "", ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             self.helper.printout('Decoding JSON has failed')
-            return -1, "", ""
+            return -1, "", "", ""
         
     def KODI_GetItemAudio(self, playerid):
         try:            
@@ -105,7 +105,7 @@ class KODI_WEBSERVER:
                 
                 thumbnail = ""
                 if parsed_json['result']['item']['thumbnail']!="" and parsed_json['result']['item']['thumbnail'].find('.jpg') != -1:
-                    thumbnail = self.ip_port + parsed_json['result']['item']['thumbnail'].replace("image://", "image/")[:-1]
+                    thumbnail = parsed_json['result']['item']['thumbnail'].replace("image://", "")[:-1]
                 else:
                     thumbnail = self._ConfigDefault['basedirpath']+'img/kodi.png'
  
@@ -116,15 +116,15 @@ class KODI_WEBSERVER:
                 if year!="":
                     album = album + " ("+str(year)+")"
 
-                return mid, str(track)+'. '+title, thumbnail, album, artist
+                return mid, str(track)+'. '+title, thumbnail, album, artist, ""
             except KeyError:
-                return -1, "", "", "", ""
+                return -1, "", "", "", "", ""
             except IndexError:
-                return -1, "", "", "", ""
+                return -1, "", "", "", "", ""
         except ValueError:
             self.helper.printout("[warning]    ", self._ConfigDefault['mesg.red'])
             self.helper.printout('Decoding JSON has failed')
-            return -1, "", "", "", ""
+            return -1, "", "", "", "", ""
         
     def KODI_GetProperties(self, playerid):
         try:

@@ -106,12 +106,12 @@ class DrawToDisplay_AudioThumbnail:
         self._drawSetting['videoinfo.time.margin_left'] = 14
         self._drawSetting['videoinfo.time.margin_top'] = 83
         
-    def setThumbnail(self, url):
+    def setThumbnail(self, url, file):
         max_width = self._drawSetting['videoinfo.image_width_height']-20
         max_heigth = self._drawSetting['videoinfo.image_width_height']-20
 
         if self._ConfigDefault['display.resolution']!="320x240":
-            self.thumbnail = self.image.scaleImage(url, max_width, max_heigth)
+            self.thumbnail = self.image.scaleImage(url, file, max_width, max_heigth)
         
     def drawProgressBar(self, margin_top = 0):
         rect_bar = self.pygame.Rect((10,self._drawSetting['videoinfo.progressbar.margin_top']+margin_top), (self.screen.get_width()-20,self._drawSetting['videoinfo.progressbar.height']))
