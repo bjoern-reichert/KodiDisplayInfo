@@ -127,7 +127,7 @@ def main():
                     elif _config_default['config.screenmodus_video'] == "thumbnail":
                         if media_id != running_libery_id:
                             running_libery_id = media_id
-                            draw_videothumbnail.setthumbnail(media_thumbnail, media_file)
+                            draw_videothumbnail.setthumbnail(KodiWebserver.kodi_checkiflocalpath(media_thumbnail), media_file)
 
                         draw_videothumbnail.drawproperties(time_now, speed, media_time, media_totaltime)
                 elif playertype == "audio":
@@ -136,7 +136,7 @@ def main():
                     if _config_default['config.screenmodus_audio'] == "thumbnail":
                         if media_id != running_libery_id:
                             running_libery_id = media_id
-                            draw_audiothumbnail.setthumbnail(media_thumbnail, media_file)
+                            draw_audiothumbnail.setthumbnail(KodiWebserver.kodi_checkiflocalpath(media_thumbnail), media_file)
                         
                         draw_audiothumbnail.drawproperties(media_title, speed, media_time, media_totaltime, media_album, media_artist)
             else:
@@ -168,7 +168,7 @@ def main():
 
 
 if __name__ == "__main__":
-    image = HelperImage(_config_default)
+    image = HelperImage(helper, _config_default)
     draw_default = DrawToDisplayDefault(helper, _config_default)
     draw_videotime = DrawToDisplayVideoTime(helper, _config_default)
     draw_videothumbnail = DrawToDisplayVideoThumbnail(helper, image, _config_default)

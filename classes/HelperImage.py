@@ -1,5 +1,6 @@
 import io, os
 from PIL import Image
+import socket
 try:
     import urllib2 as urllibopen # Python2
     from urllib import unquote
@@ -13,35 +14,36 @@ except ImportError:
 
 class HelperImage:
 
-    def __init__(self, _config_default):
-        self.pygame = None
-        self.screen = None
-        self._config_default = _config_default
+    def __init__(self, helper, _config_default):
+        self.__pygame = None
+        self.__screen = None
+        self.__helper = helper
+        self.__config_default = _config_default
 
     def set_pygamescreen(self, pygame, screen):
-        self.pygame = pygame
-        self.screen = screen
+        self.__pygame = pygame
+        self.__screen = screen
 
     @staticmethod
     def is_internetreachable():
-        conn = httplib.HTTPSConnection("8.8.8.8", timeout=3)
         try:
-            conn.request("HEAD", "/")
-        except (Exception,):
+            socket.setdefaulttimeout(3)
+            host = socket.gethostbyname("8.8.8.8")
+            s = socket.create_connection((host, 53), 2)
+            s.close()
+            return True
+        except Exception:
             return False
-        finally:
-            conn.close()
-        return True
 
     def scaleimage(self, url, file, max_width, max_heigth):
         isinternetreachable = self.is_internetreachable()
         if url != "":
             try:
-                url = unquote(url)
+                url = unquote(url).replace(" ", "%20")
                 file = unquote(file)
 
                 #load
-                default = self._config_default['basedirpath']+'img/kodi.png'
+                default = self.__helper.get_default_kodilogo()
                 if url.startswith('http') & isinternetreachable == True:
                     im = io.BytesIO(urllibopen.urlopen(url).read())
                 elif file != "":
@@ -75,7 +77,7 @@ class HelperImage:
                 mode = image.mode
                 size = image.size
                 data = image.tobytes()
-                return self.pygame.image.fromstring(data, size, mode)
+                return self.__pygame.image.fromstring(data, size, mode)
             except IOError:
                 return ""
         return ""

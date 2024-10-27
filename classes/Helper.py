@@ -5,7 +5,10 @@ import os
 class Helper:
 
 	def __init__(self, _config_default):
-		self._config_default = _config_default
+		self.__config_default = _config_default
+
+	def get_default_kodilogo(self):
+		return self.__config_default['basedirpath']+'img/kodi.png'
 	
 	def format_to_seconds(self, hours, minutes, seconds):
 		try:
@@ -15,7 +18,7 @@ class Helper:
 				minutes = minutes * 60
 			return int(hours + minutes + seconds)
 		except ValueError:
-			self.printout("[warning]    ", self._config_default['mesg.red'])
+			self.printout("[warning]    ", self.__config_default['mesg.red'])
 			self.printout('Converting time to seconds has failed!')
 			return 0
 	
@@ -25,7 +28,7 @@ class Helper:
 				hours = hours * 60
 			return int(hours + minutes)
 		except ValueError:
-			self.printout("[warning]    ", self._config_default['mesg.red'])
+			self.printout("[warning]    ", self.__config_default['mesg.red'])
 			self.printout('Converting time to minutes has failed!')
 			return 0
 		
@@ -36,7 +39,7 @@ class Helper:
 			elif modus=="short":
 				return str(self.format_to_minutes(hours, minutes)).zfill(2)+":"+str(seconds).zfill(2)
 		except ValueError:
-			self.printout("[warning]    ", self._config_default['mesg.red'])
+			self.printout("[warning]    ", self.__config_default['mesg.red'])
 			self.printout('Padding time with zeroes has failed!')
 			return ""
 		
@@ -58,7 +61,7 @@ class Helper:
 	
 	def printout(self, text, colour=""):
 		if not colour:
-			colour=self._config_default['mesg.white']
+			colour=self.__config_default['mesg.white']
 		if self.has_colours(sys.stdout):
 			seq = "\x1b[1;%dm" % colour + text + "\x1b[0m"
 			sys.stdout.write(seq)
@@ -77,7 +80,7 @@ class Helper:
 			r, g, b = [int(n, 16) for n in (r, g, b)]
 			return r, g, b
 		except ValueError as text:
-			self.printout("[error]   ", self._config_default['mesg.red'])
+			self.printout("[error]   ", self.__config_default['mesg.red'])
 			self.printout("Color Error RGB! " + str(text))
 			exit()
 			
