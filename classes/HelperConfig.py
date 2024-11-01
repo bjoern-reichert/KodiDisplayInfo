@@ -9,11 +9,11 @@ except ImportError:
 
 class HelperConfig:
     
-    def __init__(self, helper, _config_default, basedirpath):
+    def __init__(self, helper, config_default, basedirpath):
         self.__helper = helper
-        self.__config_default = _config_default
+        self.__config_default = config_default
         
-        self.__helper.printout("[info]    ", _config_default['mesg.green'])
+        self.__helper.printout("[info]    ", config_default['mesg.green'])
         self.__helper.printout("Parse Config")
         self.__configParser = configparser.RawConfigParser()
         self.__configParser.read(r'' + basedirpath + 'config.txt')

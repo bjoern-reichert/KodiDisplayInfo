@@ -16,9 +16,9 @@ class KodiWebserver:
     
     __ip_port = ""
 
-    def __init__(self, helper, _config_default, draw_default):
+    def __init__(self, helper, config_default, draw_default):
         self.__helper = helper
-        self.__config_default = _config_default
+        self.__config_default = config_default
         self.__draw_default = draw_default
 
         self.__ip_port = 'http://'+self.__config_default['KODI.webserver.host']+':'+self.__config_default['KODI.webserver.port']+'/'

@@ -14,11 +14,11 @@ except ImportError:
 
 class HelperImage:
 
-    def __init__(self, helper, _config_default):
+    def __init__(self, helper, config_default):
         self.__pygame = None
         self.__screen = None
         self.__helper = helper
-        self.__config_default = _config_default
+        self.__config_default = config_default
 
     def set_pygamescreen(self, pygame, screen):
         self.__pygame = pygame
@@ -32,7 +32,7 @@ class HelperImage:
             s = socket.create_connection((host, 53), 2)
             s.close()
             return True
-        except Exception:
+        except (Exception,):
             return False
 
     def scaleimage(self, url, file, max_width, max_heigth):
@@ -40,7 +40,7 @@ class HelperImage:
         if url != "":
             try:
                 url = unquote(url).replace(" ", "%20")
-                file = unquote(file)
+                file = unquote(file).replace(" ", "%20")
 
                 #load
                 default = self.__helper.get_default_kodilogo()

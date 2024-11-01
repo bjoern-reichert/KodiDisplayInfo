@@ -14,11 +14,11 @@ class DrawToDisplayDefault:
     __default_info_color = ""
     __img_logo = None
 
-    def __init__(self, helper, _config_default):
+    def __init__(self, helper, config_default):
         self.__pygame = None
         self.__screen = None
         self.__helper = helper
-        self.__config_default = _config_default
+        self.__config_default = config_default
 
         self.__helper.printout("[info]    ", self.__config_default['mesg.green'])
         self.__helper.printout("Screen Setup  " + str(self.__config_default['display.resolution']))

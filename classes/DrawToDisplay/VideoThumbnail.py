@@ -29,13 +29,13 @@ class DrawToDisplayVideoThumbnail:
     __img_button_play = None
     __img_button_break = None
     
-    def __init__(self, helper, image, _config_default):
+    def __init__(self, helper, image, config_default):
         self.__pygame = None
         self.__screen = None
         self.__draw_default = None
         self.__helper = helper
         self.__image = image
-        self.__config_default = _config_default
+        self.__config_default = config_default
         
     def set_pygamescreen(self, pygame, screen, draw_default):
         self.__pygame = pygame

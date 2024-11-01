@@ -27,7 +27,7 @@ ORANGE = (255, 114, 0)
 GREEN = (0, 255, 0)
 GREY = (153, 153, 153)
 
-_config_default = {
+config_default = {
     "basedirpath":                  basedirpath,
 
     "mesg.grey":                    30,
@@ -62,15 +62,15 @@ _config_default = {
     "color.grey":                   GREY
 }
 
-helper = Helper(_config_default)
+helper = Helper(config_default)
 
 # init config && check config
-helperconfig = HelperConfig(helper, _config_default, basedirpath)
-_config_default = helperconfig.parse_config()
+helperconfig = HelperConfig(helper, config_default, basedirpath)
+config_default = helperconfig.parse_config()
 
 # Display FB for older
-if _config_default['display.fbdev'] != "" and _config_default['display.writetodisplay'] == "SDL_FBDEV":
-    os.environ["SDL_FBDEV"] = _config_default['display.fbdev']
+if config_default['display.fbdev'] != "" and config_default['display.writetodisplay'] == "SDL_FBDEV":
+    os.environ["SDL_FBDEV"] = config_default['display.fbdev']
 
 
 def main_exit():
@@ -82,11 +82,11 @@ def main():
     version = ".".join(map(str, sys.version_info[:3]))
     helper.printout("Python " + version)
 
-    helper.printout("[info]    ", _config_default['mesg.cyan'])
+    helper.printout("[info]    ", config_default['mesg.cyan'])
     helper.printout("Start: KodiDisplayInfo")
 
     pygame.init()
-    screen = pygame.display.set_mode(getattr(draw_default, 'screen' + _config_default['display.resolution'])(), 0, 32)
+    screen = pygame.display.set_mode(getattr(draw_default, 'screen' + config_default['display.resolution'])(), 0, 32)
     pygame.display.set_caption('KodiDisplayInfo - Python ' + version)
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
@@ -115,16 +115,16 @@ def main():
                 
             time_now = datetime.datetime.now()
 
-            screen.fill(_config_default['color.black'])  # start draw - reset
+            screen.fill(config_default['color.black'])  # start draw - reset
             
             playerid, playertype = KodiWebserver.kodi_getactiveplayers()
             if int(playerid) >= 0:
                 if playertype == "video":
                     media_id, media_title, media_thumbnail, media_file = KodiWebserver.kodi_getitemvideo(playerid)
                     speed, media_time, media_totaltime = KodiWebserver.kodi_getproperties(playerid)
-                    if _config_default['config.screenmodus_video'] == "time":
+                    if config_default['config.screenmodus_video'] == "time":
                         draw_videotime.drawproperties(media_title, time_now, speed, media_time, media_totaltime)
-                    elif _config_default['config.screenmodus_video'] == "thumbnail":
+                    elif config_default['config.screenmodus_video'] == "thumbnail":
                         if media_id != running_libery_id:
                             running_libery_id = media_id
                             draw_videothumbnail.setthumbnail(KodiWebserver.kodi_checkiflocalpath(media_thumbnail), media_file)
@@ -133,7 +133,7 @@ def main():
                 elif playertype == "audio":
                     media_id, media_title, media_thumbnail, media_album, media_artist, media_file = KodiWebserver.kodi_getitemaudio(playerid)
                     speed, media_time, media_totaltime = KodiWebserver.kodi_getproperties(playerid)
-                    if _config_default['config.screenmodus_audio'] == "thumbnail":
+                    if config_default['config.screenmodus_audio'] == "thumbnail":
                         if media_id != running_libery_id:
                             running_libery_id = media_id
                             draw_audiothumbnail.setthumbnail(KodiWebserver.kodi_checkiflocalpath(media_thumbnail), media_file)
@@ -144,7 +144,7 @@ def main():
                 running_libery_id = -1
 
                 media_total = {}
-                jsonobject = _config_default['config.localmediatotal']
+                jsonobject = config_default['config.localmediatotal']
                 for name in copy.copy(jsonobject):
                     media = jsonobject[name]
                     media_total.update({name:str(KodiWebserver.kodi_gettotalcount(media))})
@@ -152,13 +152,13 @@ def main():
                 draw_default.drawlogostartscreen(time_now, json.loads(json.dumps(media_total)))
     
             pygame.display.flip()
-            if _config_default['display.writetodisplay'] == "DIRECT":
-                if _config_default['display.fbdev'] != "":
-                    f = open(_config_default['display.fbdev'], "wb")
+            if config_default['display.writetodisplay'] == "DIRECT":
+                if config_default['display.fbdev'] != "":
+                    f = open(config_default['display.fbdev'], "wb")
                     f.write(screen.convert(16, 0).get_buffer())
                     f.close()
         
-        helper.printout("[end]     ", _config_default['mesg.magenta'])
+        helper.printout("[end]     ", config_default['mesg.magenta'])
         helper.printout("bye ...")
         main_exit()
     except SystemExit:
@@ -168,11 +168,11 @@ def main():
 
 
 if __name__ == "__main__":
-    image = HelperImage(helper, _config_default)
-    draw_default = DrawToDisplayDefault(helper, _config_default)
-    draw_videotime = DrawToDisplayVideoTime(helper, _config_default)
-    draw_videothumbnail = DrawToDisplayVideoThumbnail(helper, image, _config_default)
-    draw_audiothumbnail = DrawToDisplayAudioThumbnail(helper, image, _config_default)
+    image = HelperImage(helper, config_default)
+    draw_default = DrawToDisplayDefault(helper, config_default)
+    draw_videotime = DrawToDisplayVideoTime(helper, config_default)
+    draw_videothumbnail = DrawToDisplayVideoThumbnail(helper, image, config_default)
+    draw_audiothumbnail = DrawToDisplayAudioThumbnail(helper, image, config_default)
     
-    KodiWebserver = KodiWebserver(helper, _config_default, draw_default)
+    KodiWebserver = KodiWebserver(helper, config_default, draw_default)
     main()

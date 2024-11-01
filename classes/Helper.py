@@ -4,8 +4,8 @@ import os
 
 class Helper:
 
-	def __init__(self, _config_default):
-		self.__config_default = _config_default
+	def __init__(self, config_default):
+		self.__config_default = config_default
 
 	def get_default_kodilogo(self):
 		return self.__config_default['basedirpath']+'img/kodi.png'
